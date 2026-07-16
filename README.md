@@ -50,6 +50,10 @@ npm install
 # 服务配置
 PORT=3000
 
+# 可选：额外允许访问 API 的前端域名，多个值用英文逗号分隔。
+# 本地 Vite 地址和当前生产前端地址已由代码默认支持。
+CORS_ORIGINS=https://travel-web-ruddy-kappa.vercel.app
+
 # 可选值：DEEPSEEK / GJLD / XIAOMI
 MODEL_PROVIDE=DEEPSEEK
 
@@ -423,4 +427,17 @@ proxy_cache off;
 npm run dev      # nodemon 开发启动
 npm start        # node 启动
 npm test         # 当前未配置测试
+```
+
+## Vercel 部署
+
+后端项目根目录已包含 `api/index.js` 和 `vercel.json`：Vercel 会将 Express 应用作为 Serverless Function 部署，并把所有请求转发给它。
+
+在 Vercel 的 **travel-server → Settings → Environment Variables** 中配置 README 列出的模型、Supabase 和数据库变量；如使用自定义前端域名或 Preview 域名，将其加入 `CORS_ORIGINS`（多个域名用英文逗号分隔）。不要在仓库提交真实密钥。
+
+部署完成后，可访问：
+
+```txt
+https://travel-server-kappa.vercel.app/api-docs
+https://travel-server-kappa.vercel.app/api-docs.json
 ```

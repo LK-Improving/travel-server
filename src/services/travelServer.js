@@ -29,7 +29,6 @@ class TravelServer {
   constructor() {
     this.llm = null;
     this.modelProvide = cleanEnv(process.env.MODEL_PROVIDE)?.toUpperCase();
-    this.initLLM();
   }
 
   initLLM() {
@@ -65,6 +64,14 @@ class TravelServer {
     });
   }
 
+  getLLM() {
+    if (!this.llm) {
+      this.initLLM();
+    }
+
+    return this.llm;
+  }
+
   async recommend(city, budget, days) {
     if (budget < 100 || days < 1 || days > 10) {
       throw new Error("预算必须在100元以上，天数必须在1天以上10天以下");
@@ -73,7 +80,7 @@ class TravelServer {
     const prompt = this.getTravelPrompt(city, budget, days);
     try {
       // 调用模型生成推荐景点
-      const response = await this.llm.invoke(prompt);
+      const response = await this.getLLM().invoke(prompt);
       const fullResponse = response.content || "";
       try {
         const jsonMatch =
@@ -126,7 +133,7 @@ class TravelServer {
       new HumanMessage(message),
     ];
     try {
-      const stream = await this.llm.stream(messages);
+      const stream = await this.getLLM().stream(messages);
 
       let fullResponse = "";
 

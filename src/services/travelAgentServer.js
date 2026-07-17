@@ -101,7 +101,7 @@ ${JSON.stringify(tools, null, 2)}`),
     ];
 
     try {
-      const response = await TravelServer.llm.invoke(plannerMessages);
+      const response = await TravelServer.getLLM().invoke(plannerMessages);
       const plan = extractJson(response.content || "");
       const toolCalls = normalizeToolCalls(plan?.toolCalls);
       return toolCalls.length ? toolCalls : heuristicPlan(message, options);
@@ -175,7 +175,7 @@ ${message}
 ${JSON.stringify(toolResults, null, 2)}`),
     ];
 
-    const llmStream = await TravelServer.llm.stream(messages);
+    const llmStream = await TravelServer.getLLM().stream(messages);
     let reply = "";
 
     for await (const chunk of llmStream) {

@@ -210,7 +210,7 @@ ${buildContext(sources)}`),
     ];
     // console.log('messages :>> ', messages);
     try {
-      const stream = await TravelServer.llm.stream(messages);
+      const stream = await TravelServer.getLLM().stream(messages);
       let fullResponse = '';
 
       for await (const chunk of stream) {

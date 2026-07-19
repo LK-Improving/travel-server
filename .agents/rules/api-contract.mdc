@@ -1,0 +1,37 @@
+---
+description: API、OpenAPI 与 SSE 契约规则；新增或调整 HTTP/SSE 接口、swagger、鉴权、错误响应或调用方时遵循。
+globs: src/swagger.js,src/routers/**,src/utils/**
+alwaysApply: false
+---
+
+# API、OpenAPI 与 SSE 契约规则
+
+在修改 HTTP/SSE 接口、`src/swagger.js`、认证、错误响应或接口调用时读取本规则。
+
+## 契约来源与优先级
+
+1. `src/swagger.js` 生成的 `/api-docs.json`。
+2. 从该 OpenAPI 导出的 Apifox 文档。
+3. 带版本或日期的 `.agents/Documents/接口设计/` Markdown。
+4. 仅用于核对的 Swagger UI 或截图。
+
+冲突时以更高优先级来源为准；不能确认时在契约中标为待确认，不自行猜测字段或行为。
+
+## HTTP 约定
+
+- 明确路径、方法、请求字段、响应字段、状态码、鉴权要求、空态和错误结构。
+- 受保护资源以认证上下文的用户 ID 为数据边界；客户端的 `userId` 不能作为授权依据。
+- 接口新增或变更必须同步修改 `src/swagger.js`；现有 Swagger 仅覆盖部分接口时，补齐本次受影响路径而不是让 Markdown 成为唯一事实来源。
+- 明确收藏等写入接口的重复提交/更新语义，数据库错误不能直接暴露给客户端。
+
+## SSE 约定
+
+- 标注 `Content-Type: text/event-stream`、请求方法、鉴权是否可选、事件类型、字段、完成与错误事件。
+- 普通/RAG SSE 和 Agent SSE 当前使用不同事件信封。任何统一改造须保持兼容策略，并在契约中说明迁移窗口。
+- 明确客户端取消后的资源清理，以及网关必须关闭 buffering 的部署前提。
+
+## 产物与验证
+
+- 归一化契约保存为 `.agents/Documents/接口设计/YYYY-MM-DD-主题-contract.md`。
+- 每份契约记录来源、导出/确认时间、上游版本、待确认项和兼容性影响。
+- 用 `/api-docs.json`、定向 HTTP 请求或 SSE 客户端核对本次变更；不以截图替代请求验证。

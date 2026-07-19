@@ -1,0 +1,30 @@
+---
+description: Express 后端分层与依赖方向规则；约束 app/index、路由、服务、中间件与 SSE 工具的职责边界。
+globs: src/app.js,src/index.js,api/index.js,src/routers/**,src/services/**,src/middlewares/**,src/utils/**
+alwaysApply: false
+---
+
+# Express 后端分层规则
+
+在修改 `src/app.js`、`src/index.js`、`src/routers/`、`src/services/`、`src/middlewares/` 或 `src/utils/` 时读取本规则。
+
+## 项目约定
+
+- 应用装配：`src/app.js`；进程入口：`src/index.js`；Serverless 入口：`api/index.js`。
+- 路由：`src/routers/`；业务服务：`src/services/`；中间件：`src/middlewares/`；SSE 工具：`src/utils/`。
+- OpenAPI：`src/swagger.js`，运行时地址为 `/api-docs.json`；数据库迁移：`migrations/`，本地初始化脚本为 `scripts/initAuthDb.js`。
+
+## 分层与边界
+
+- `app.js` 只装配 Express、中间件、Swagger 和路由；`index.js` 只监听端口。
+- 路由只处理请求/响应协议、基础字段校验和鉴权选择；不得包含复杂流程、SQL、提示词或 SDK 初始化。
+- `*Server.js` 接收普通数据对象，编排业务流程；不得接收或依赖 Express 的 `req`、`res`。
+- `postgresClient.js`、`supabaseClient.js`、`supabaseRagStore.js`、`authToken.js`、`agentTools.js` 和 `utils/` 是基础能力边界，禁止反向依赖路由。
+- 普通和 Agent SSE 必须复用现有流工具；不要在路由中复制响应头或自行发明事件信封。
+
+## 交付
+
+- 接口改变时同步更新 `src/swagger.js`、归一化契约和调用方。
+- 覆盖成功、参数错误、鉴权失败、空结果、外部服务异常和重复请求行为。
+- SSE 改动还覆盖事件顺序、完成、错误、客户端断连和代理缓冲。
+- 运行最小相关检查；当前 `npm test` 未配置可通过的测试套件。

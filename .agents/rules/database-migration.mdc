@@ -1,0 +1,28 @@
+---
+description: PostgreSQL 与 Supabase 数据变更规则；修改 migrations、初始化脚本或持久化/向量存储客户端时遵循。
+globs: migrations/**,scripts/initAuthDb.js,src/services/postgresClient.js,src/services/supabaseClient.js,src/services/supabaseRagStore.js
+alwaysApply: false
+---
+
+# PostgreSQL 与 Supabase 数据变更规则
+
+在修改 `migrations/`、`scripts/initAuthDb.js`、`src/services/postgresClient.js`、`supabaseRagStore.js` 或影响持久化模型的代码时读取本规则。
+
+## 数据边界
+
+- 用户、认证、收藏和对话记忆使用本地 PostgreSQL 配置。
+- RAG 文档、向量扩展和相似度检索由 Supabase PostgreSQL/pgvector 管理。
+- 不将两类连接串、数据库密码、服务角色密钥或真实 token 写入代码、迁移、契约或验收报告。
+
+## Migration 规则
+
+- 表结构变更仅通过 `migrations/` 新增按日期排序的 SQL 文件；不改写已执行 migration。
+- SQL 应可安全重复执行或明确失败前提，使用事务包裹相关结构变更；索引、约束、默认值和回滚/兼容策略要写清楚。
+- 所有动态值使用参数化查询；用户数据读写必须按认证用户边界过滤。
+- `scripts/initAuthDb.js` 负责按顺序执行文件；改动 migration 发现或执行顺序时同步核对脚本。
+
+## 验证
+
+- 记录目标数据库、前置条件、执行命令、预期表/索引变化与回滚路径。
+- 本地仅在具备安全测试配置时执行 migration；不得对未知生产数据库执行初始化脚本。
+- 涉及 RAG 表、扩展或向量维度时，核对 Embedding 模型维度与既有表定义兼容性。

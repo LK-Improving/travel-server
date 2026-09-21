@@ -1,0 +1,177 @@
+# travel-server 运行时依赖统一编排（PostgreSQL + Redis + Elasticsearch+IK + Milvus + MinIO）
+#
+#   - Milvus：稠密向量检索（RAG 混合检索 dense 侧 / reindex:milvus），当前真机未运行，需本编排拉起。
+#   - MinIO：① Milvus standalone 内部对象存储（必带）；② 可选的应用层对象存储（存上传原文档）。
+#
+# 作用：把后端检索/存储依赖容器化，便于复现与迁移；ES 用来替换 pg_trgm 做中文关键字召回。
+#
+# ⚠️ 端口冲突规避（已对照本机现有 Docker 容器与本地监听端口）：
+#   已占用 → 5432(native PG)/5433(dt-postgres)/7311(ai-retouch-pg)
+#           6379(local-redis)/6380(dt-redis)/7312(ai-retouch-redis)
+#           1883(dt-mosquitto)/9000/9001(dt-minio)/7313/7314(ai-retouch-minio)/8080(native uniapp)
+#   本编排改用 → PG:5434  Redis:6381  ES:9200（host 侧均空闲，且不与其他容器冲突）
+#
+# 用法：
+#   仅起 ES（最小改动，配合现有 native PG/Redis 即可跑关键字评测）：
+#     docker compose up -d elasticsearch
+#   仅起 Milvus 全套（etcd + minio + milvus，恢复稠密检索）：
+#     docker compose up -d milvus
+#   起全部（完整容器化；注意下方「数据」说明）：
+#     docker compose up -d
+#   查看：docker compose ps   日志：docker compose logs -f elasticsearch
+#
+# 数据说明（重要）：
+#   - 本机原生 PostgreSQL(5432) 已存有 travel 库（知识库/切片/评测数据）。
+#   - 若只跑 elasticsearch：应用与评测脚本继续连原生 5432/6379，无需改动 .env，仅改 ELASTICSEARCH_URL。
+#   - 若跑全部容器：postgres 容器(5434) 初始为空，需先把原生 travel 库迁移过来，
+#     再在 .env 把 AUTH_DB_PORT=5434、REDIS_URL 指向 6381；否则应用读不到数据。
+#     （迁移示例：pg_dump -h localhost -p 5432 -U postgres travel | psql -h localhost -p 5434 -U postgres travel）
+
+name: travel-server-env
+
+services:
+  # ---------- PostgreSQL（存储切片正文 / 知识库 / 评测） ----------
+  postgres:
+    image: postgres:16
+    container_name: travel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: travel
+      POSTGRES_USER: postgres
+      # 本地开发用 trust 免密，便于与现有无密码/localhost 连接习惯一致；
+      # 若原生 PG 有密码，请改为 POSTGRES_PASSWORD 并同步 .env 的 AUTH_DB_PASSWORD。
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5434:5432"   # host 5434 → 避开 5432(native)/5433(dt)/7311(ai-retouch)
+    volumes:
+      - travel_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d travel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ---------- Redis（队列 / 缓存） ----------
+  redis:
+    image: redis:7
+    container_name: travel-redis
+    restart: unless-stopped
+    ports:
+      - "6381:6379"   # host 6381 → 避开 6379(local-redis)/6380(dt)/7312(ai-retouch)
+    volumes:
+      - travel_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------- Elasticsearch + IK 中文分词（关键字稀疏召回，替换 pg_trgm） ----------
+  # 注：medcl/elasticsearch-analysis-ik 镜像已从 Docker Hub 下架，改为本地 Dockerfile
+  #     （docker/es-ik/Dockerfile）基于官方 ES 8.11.3 离线内置 IK 插件构建。
+  elasticsearch:
+    build:
+      context: ./docker/es-ik          # 基于官方 ES 8.11.3 离线内置 IK 插件（见 Dockerfile）
+      dockerfile: Dockerfile
+    image: travel-elasticsearch-ik:8.11.3   # 本地构建产物标签
+    container_name: travel-elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node                 # 单节点，跳过集群引导
+      xpack.security.enabled: "false"              # 本地关安全，适配器仅在有 ApiKey 时才带鉴权头
+      network.host: "0.0.0.0"                       # 必须暴露给 host 端口映射
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Des.bootstrap.memory_lock=false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"   # host 9200 → 空闲（避开 9000/9001(dt-minio)/9080/8440）
+      # 9300 为内部 transport，单节点本地无需对外发布
+    volumes:
+      - travel_es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\"'"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s   # ES 冷启动较慢
+
+  # ---------- etcd（Milvus 元数据/协调依赖，必须） ----------
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.14
+    container_name: travel-etcd
+    restart: unless-stopped
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - travel_etcd_data:/etcd
+    command: etcd -advertise-client-urls=http://etcd:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # ---------- MinIO（双重身份：① Milvus 内部对象存储；② 可选的应用层对象存储） ----------
+  # 端口避开本机已占的 9000/9001（dt-minio）：host 9050→9000(api) / 9051→9001(console)。
+  # Milvus standalone 必须用 MinIO（或外部 S3）存 segment/索引，所以"加 Milvus 必然带一个 MinIO"。
+  # 应用层对象存储（lib/infra/objectStorage.ts）未配置 OBJECT_STORAGE_* 时降级为内存实现，本地联调可跑通；
+  # 想让上传的原始文档也持久化，见 .env 末尾「应用层对象存储（可选）」段落，把端点指向本服务即可。
+  milvus-minio:
+    image: quay.io/minio/minio:RELEASE.2024-08-17T01-24-54Z
+    container_name: travel-milvus-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - travel_minio_data:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    ports:
+      - "9050:9000"   # host 9050 → 避开 9000/9001(dt-minio)
+      - "9051:9001"   # host 9051 → console
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # ---------- Milvus（稠密向量检索：RAG 混合检索的 dense 侧 + reindex:milvus） ----------
+  # 应用默认连 127.0.0.1:19530（lib/config.ts 默认值，无需改 .env）。
+  # 当前 19530 在真机未运行 → ingest 跳过 dense 向量、reindex:milvus 跑不了、rag.ts 的 milvus 分支退化。
+  # 本服务拉起后，dense 路径即可恢复（长自然语言召回弱的 0.692 问题才有稠密侧可救）。
+  milvus:
+    image: milvusdb/milvus:v2.4.13
+    container_name: travel-milvus
+    restart: unless-stopped
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: milvus-minio:9000
+    volumes:
+      - travel_milvus_data:/var/lib/milvus
+    ports:
+      - "19530:19530"   # host 19530 → 当前空闲（Milvus 未运行）
+    depends_on:
+      - etcd
+      - milvus-minio
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  travel_pg_data:
+  travel_redis_data:
+  travel_es_data:
+  travel_etcd_data:
+  travel_minio_data:
+  travel_milvus_data:

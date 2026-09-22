@@ -20,7 +20,9 @@
     "eval:keyword": "tsx scripts/evaluateKeywordRecall.ts",
     "eval:hybrid": "tsx scripts/evaluateHybridRecall.ts",
     "eval:ab": "tsx scripts/verifyAbGrayscale.ts",
-    "smoke:hybrid": "tsx scripts/smokeTestHybrid.ts"
+    "eval:rewrite": "tsx scripts/evaluateQueryRewrite.ts",
+    "smoke:hybrid": "tsx scripts/smokeTestHybrid.ts",
+    "smoke:runtime": "tsx scripts/smokeRuntime.ts"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.5.1",

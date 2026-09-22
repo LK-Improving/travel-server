@@ -1,0 +1,166 @@
+{
+  "base": "http://127.0.0.1:8000",
+  "account": "smoke_admin",
+  "role": "admin",
+  "knowledgeBaseCount": 5,
+  "retrievalKnowledgeBaseId": "26929070-a2a2-43ec-818a-ff1f6d53a996",
+  "passed": 16,
+  "criticalTotal": 16,
+  "total": 17,
+  "results": [
+    {
+      "name": "heartbeat",
+      "method": "GET",
+      "path": "/api/heartbeat",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"code\":200,\"msg\":\"服务正常启动\",\"timestamp\":1790098972389}}"
+    },
+    {
+      "name": "auth.register",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 409,
+      "ok": false,
+      "optional": true,
+      "note": "账号已存在（409 冲突，符合预期），继续用既有账号登录",
+      "snippet": "{\"success\":false,\"error\":{\"code\":\"CONFLICT\",\"message\":\"账号已存在\"}}"
+    },
+    {
+      "name": "auth.login",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"token\":\"<redacted>\",\"user\":{\"id\":\"6d530ea0-28b6-483a-bd4a-f8abaaadd1e2\",\"account\":\"smoke_admin\",\"nickname\":\"smoke_admin\",\"role\":\"admin\",\"avatarUrl\":null}}}"
+    },
+    {
+      "name": "auth.me",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"id\":\"6d530ea0-28b6-483a-bd4a-f8abaaadd1e2\",\"role\":\"admin\",\"email\":\"smoke_admin\"}}"
+    },
+    {
+      "name": "kb.list",
+      "method": "GET",
+      "path": "/api/admin/knowledge-bases",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":[{\"id\":\"b0bf08a7-09a3-4d6d-91ed-fd2601586b45\",\"name\":\"smoke-kb-1790098860766\",\"description\":\"runtime smoke\",\"status\":\"active\",\"documentCount\":1,\"createdAt\":\"2026-09-22T17:41:00.786Z\",\"updatedAt\":\"2026-09-22T17:41:00.786Z\"},{\"id\":\"2ccbbe42-8fe8-4f27-9137-942a711f2a98\",\"name\":\"smoke-kb-1790098005701\",\"description\":\"runtime smoke\",\"status\":\"active\",\"documentCount\":1,\"createdAt\"…"
+    },
+    {
+      "name": "kb.create",
+      "method": "POST",
+      "path": "/api/admin/knowledge-bases",
+      "status": 201,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"id\":\"d03c22aa-7485-403f-902a-789b421c4d3f\",\"name\":\"smoke-kb-1790098972727\",\"description\":\"runtime smoke\",\"status\":\"active\",\"documentCount\":0,\"createdAt\":\"2026-09-22T17:42:52.742Z\",\"updatedAt\":\"2026-09-22T17:42:52.742Z\"}}"
+    },
+    {
+      "name": "ingest.upload",
+      "method": "POST",
+      "path": "/api/admin/documents",
+      "status": 201,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"id\":\"6487cc18-c1cb-4199-9222-274426219f76\",\"knowledgeBaseId\":\"d03c22aa-7485-403f-902a-789b421c4d3f\",\"title\":\"运行时冒烟文档\",\"fileName\":\"smoke-1790098972747.md\",\"status\":\"processing\",\"regions\":[],\"tags\":[],\"chunkCount\":0,\"errorMessage\":null,\"progress\":0,\"processingStage\":\"排队等待\",\"createdAt\":\"2026-09-22T17:42:52.761Z\",\"updatedAt\":\"2026-09-22T17:42:52.784Z\",\"queueStatus\":\"queued\"}}"
+    },
+    {
+      "name": "ingest.list",
+      "method": "GET",
+      "path": "/api/admin/documents?knowledgeBaseId=d03c22aa-7485-403f-902a-789b421c4d3f",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":[{\"id\":\"6487cc18-c1cb-4199-9222-274426219f76\",\"knowledgeBaseId\":\"d03c22aa-7485-403f-902a-789b421c4d3f\",\"title\":\"运行时冒烟文档\",\"fileName\":\"smoke-1790098972747.md\",\"status\":\"processing\",\"regions\":[],\"tags\":[],\"chunkCount\":0,\"errorMessage\":null,\"progress\":0,\"processingStage\":\"排队等待\",\"createdAt\":\"2026-09-22T17:42:52.761Z\",\"updatedAt\":\"2026-09-22T17:42:52.784Z\"}]}"
+    },
+    {
+      "name": "ingest.chunks",
+      "method": "GET",
+      "path": "/api/admin/documents/6487cc18-c1cb-4199-9222-274426219f76/chunks",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":[]}"
+    },
+    {
+      "name": "ingest.chunks",
+      "method": "GET",
+      "path": "/api/admin/documents/6487cc18-c1cb-4199-9222-274426219f76/chunks",
+      "status": 200,
+      "ok": true,
+      "note": "切片=1（轮询 2 次后就绪，摄取全链路通过）",
+      "snippet": "{\"success\":true,\"data\":[{\"chunkId\":\"43d5eb9d-266a-270d-f533-c3dd1a37b435\",\"chunkIndex\":0,\"section\":null,\"page\":null,\"content\":\"# 冒烟测试文档 本文档由 scripts/smokeRuntime.ts 自动生成，用于验证摄取链路。 杭州西湖一日游建议：清晨断桥残雪，上午乘船游湖，中午楼外楼用餐，下午苏堤春晓。\",\"regions\":[],\"tags\":[],\"embeddingModel\":\"BAAI/bge-m3\"}]}"
+    },
+    {
+      "name": "hybrid.ab",
+      "method": "POST",
+      "path": "/api/admin/retrieval-debug",
+      "status": 200,
+      "ok": true,
+      "note": "hits=5 backend=pg_trgm",
+      "snippet": "{\"success\":true,\"data\":{\"hits\":[{\"chunkId\":\"9289c1c1-fdd9-e16c-f639-b342c1be2d56\",\"documentId\":\"b9cd4b31-f91b-4210-a688-ad2e8c6e3347\",\"title\":\"杭州市旅游美食知识库\",\"section\":null,\"page\":null,\"content\":\"### 叫花鸡（杭州市） - 品类：特色大菜 - 风味：整鸡裹荷叶与泥煨烤，敲开泥壳后荷叶清香渗入鸡肉，酥烂脱骨 - 标签：杭帮菜、典故菜、宴席 ## 三、特产伴手礼 - 西湖龙井：中国十大名茶，狮峰、龙井、云栖、虎跑、梅家坞五大产区，明前茶为上品 - 西湖藕粉：清甜滋润，冲调即食，适合送长辈 - 杭扇、杭绸、张小泉剪刀：杭州传统工艺三张名片 - 临安山核桃、天目笋干：山区特产，休闲零食与炖汤食材 ## 四、民…"
+    },
+    {
+      "name": "hybrid.elasticsearch",
+      "method": "POST",
+      "path": "/api/admin/retrieval-debug",
+      "status": 200,
+      "ok": true,
+      "note": "hits=5 backend=elasticsearch",
+      "snippet": "{\"success\":true,\"data\":{\"hits\":[{\"chunkId\":\"9289c1c1-fdd9-e16c-f639-b342c1be2d56\",\"documentId\":\"b9cd4b31-f91b-4210-a688-ad2e8c6e3347\",\"title\":\"杭州市旅游美食知识库\",\"section\":null,\"page\":null,\"content\":\"### 叫花鸡（杭州市） - 品类：特色大菜 - 风味：整鸡裹荷叶与泥煨烤，敲开泥壳后荷叶清香渗入鸡肉，酥烂脱骨 - 标签：杭帮菜、典故菜、宴席 ## 三、特产伴手礼 - 西湖龙井：中国十大名茶，狮峰、龙井、云栖、虎跑、梅家坞五大产区，明前茶为上品 - 西湖藕粉：清甜滋润，冲调即食，适合送长辈 - 杭扇、杭绸、张小泉剪刀：杭州传统工艺三张名片 - 临安山核桃、天目笋干：山区特产，休闲零食与炖汤食材 ## 四、民…"
+    },
+    {
+      "name": "hybrid.pg_trgm",
+      "method": "POST",
+      "path": "/api/admin/retrieval-debug",
+      "status": 200,
+      "ok": true,
+      "note": "hits=5 backend=pg_trgm",
+      "snippet": "{\"success\":true,\"data\":{\"hits\":[{\"chunkId\":\"9289c1c1-fdd9-e16c-f639-b342c1be2d56\",\"documentId\":\"b9cd4b31-f91b-4210-a688-ad2e8c6e3347\",\"title\":\"杭州市旅游美食知识库\",\"section\":null,\"page\":null,\"content\":\"### 叫花鸡（杭州市） - 品类：特色大菜 - 风味：整鸡裹荷叶与泥煨烤，敲开泥壳后荷叶清香渗入鸡肉，酥烂脱骨 - 标签：杭帮菜、典故菜、宴席 ## 三、特产伴手礼 - 西湖龙井：中国十大名茶，狮峰、龙井、云栖、虎跑、梅家坞五大产区，明前茶为上品 - 西湖藕粉：清甜滋润，冲调即食，适合送长辈 - 杭扇、杭绸、张小泉剪刀：杭州传统工艺三张名片 - 临安山核桃、天目笋干：山区特产，休闲零食与炖汤食材 ## 四、民…"
+    },
+    {
+      "name": "sse.rag.chat",
+      "method": "POST(SSE)",
+      "path": "/api/rag/chat",
+      "status": 200,
+      "ok": true,
+      "note": "收到 5 个 SSE 事件",
+      "snippet": "id: 1\nevent: connected\ndata: {\"type\":\"connected\",\"requestId\":\"920365b2-412c-462f-9652-c6c32de3647c\",\"messageId\":\"769e1e31-f18d-42ee-a49f-3b981a334533\",\"seq\":1,\"timestamp\":1790098979417,\"data\":{\"type\":\"connected\"}}\n\nid: 2\nevent: status\ndata: {\"type\":\"status\",\"requestId\":\"920365b2-412c-462f-9652-c6c32de3647c\",\"messageId\":\"769e1e31-f18d-42ee-a49f-3b981a334533\",\"seq\":2,\"timestamp\":1790098979417,\"data\":{\"stage\":\"accepted\"}}\n\nid: 3\nevent: complete\ndata: {\"type\":\"complete\",\"requestId\":\"920365b2-412c-462f-9652-c6c32de3647c\",\"messageId\":\"769e1e31-f18d-42ee-a49f-3b981a334533\",\"seq\":3,\"timestamp\":1790098…"
+    },
+    {
+      "name": "memory.list",
+      "method": "GET",
+      "path": "/api/memories",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"conversationId\":\"default\",\"items\":[]}}"
+    },
+    {
+      "name": "memory.summary",
+      "method": "GET",
+      "path": "/api/memories/summary",
+      "status": 200,
+      "ok": true,
+      "note": "ok",
+      "snippet": "{\"success\":true,\"data\":{\"summary\":null}}"
+    },
+    {
+      "name": "audit.list",
+      "method": "GET",
+      "path": "/api/admin/audit-logs?limit=5",
+      "status": 200,
+      "ok": true,
+      "note": "audit=0 条",
+      "snippet": "{\"success\":true,\"data\":[]}"
+    }
+  ]
+}

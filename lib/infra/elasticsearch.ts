@@ -293,14 +293,19 @@ export class KeywordSearchRouter {
       limit: number;
       minScore: number;
       variant?: string | null;
+      /** 稀疏检索实际使用的文本（§7.2 长句改写）；缺省即原句。 */
+      sparseQuery?: string | null;
     },
   ): Promise<{ hits: KeywordHit[]; backend: SparseBackend }> {
     let backend = this.chooseBackend(query, options.variant);
+    // 稀疏臂可用改写后的短查询（§7.2），但 A/B 分流必须按"原句"哈希：
+    // 保证同一问题在改写开关前后落到同一臂，灰度口径与可观测统计不因改写而漂移。
+    const searchText = (options.sparseQuery ?? '').trim() || query;
     let hits: KeywordHit[];
     if (backend === 'elasticsearch') {
       if (this.es.configured) {
         try {
-          hits = await this.es.search(query, {
+          hits = await this.es.search(searchText, {
             regions: options.regions,
             knowledgeBaseId: options.knowledgeBaseId,
             limit: options.limit,
@@ -309,7 +314,7 @@ export class KeywordSearchRouter {
         } catch {
           backend = 'pg_trgm_fallback';
           hits = await this.trgmSearch(
-            query,
+            searchText,
             options.regions ?? null,
             options.knowledgeBaseId ?? null,
             options.limit,
@@ -319,7 +324,7 @@ export class KeywordSearchRouter {
       } else {
         backend = 'pg_trgm_fallback';
         hits = await this.trgmSearch(
-          query,
+          searchText,
           options.regions ?? null,
           options.knowledgeBaseId ?? null,
           options.limit,
@@ -328,7 +333,7 @@ export class KeywordSearchRouter {
       }
     } else {
       hits = await this.trgmSearch(
-        query,
+        searchText,
         options.regions ?? null,
         options.knowledgeBaseId ?? null,
         options.limit,

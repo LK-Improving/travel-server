@@ -57,4 +57,14 @@
 - [x] `npm run typecheck`（`tsc --noEmit`）0 错误
 - [x] `npm run build`（`next build`）40+ 路由编译通过
 - [x] 旧 Express 代码已删除，git 历史保留
-- [ ] 运行时核心端点（鉴权、知识库、文档摄取、混合检索、RAG/Agent 流式、会话记忆、审计）—— 需在具备 DB / Milvus / ES / Redis / LLM 的环境启动后联调
+- [x] 运行时核心端点（鉴权、知识库、文档摄取、混合检索、RAG/Agent 流式、会话记忆、审计）—— 需在具备 DB / Milvus / ES / Redis / LLM 的环境启动后联调
+
+### 运行时联调（2026-09-23 完成）
+在 DB / Milvus / ES / Redis / LLM 齐备的环境起 `npm run dev` + `npm run worker` 后执行 `npm run smoke:runtime`（`scripts/smokeRuntime.ts`，产物 `eval/runtime-smoke.json`），关键步骤 15/15 通过：心跳、注册/登录/me、知识库列表与创建、文档上传与切片、混合检索（`ab` / `elasticsearch` / `pg_trgm` 三路均返回 5 条且 `sparseBackend` 正确）、RAG Agent SSE 流式（收到结构化事件）、记忆列表与摘要、审计日志列表。
+
+联调中**发现并修复的真实缺陷**：
+1. **文档摄取全链路不通（严重）**：`lib/infra/queue.ts` 用 `jobId: \`doc:${documentId}\`` 入队，而 BullMQ v5+ 禁止自定义 jobId 含 `:`，导致每次上传入队即失败、文档被补偿回 `draft` 并记「队列不可用，任务未启动」，永远不出切片。改为 `doc-${documentId}` 后，worker 正常消费（实测 1.4–2.6s 出切片，embedding 模型 `BAAI/bge-m3`）。
+2. **重复注册返回 500**：`createUser` 抛普通 Error，冒泡成 500；已在 `app/api/auth/register/route.ts` 捕获并转为 `conflict`，语义正确为 409。
+3. 环境侧：对象存储未配置时降级为**进程内内存实现**，worker 是独立进程读不到上传原文，摄取必然失败；本地联调需在 `.env` 启用 `OBJECT_STORAGE_*`（指向 MinIO）才能让两进程共享原文。
+
+**遗留（未修，需确认后处理）**：`lib/repositories/adminRepo.ts` 的 `audit()` 目前**无任何调用方**，运营台的建库/上传/发布等写操作不落审计日志（审计列表接口正常但恒为 0 条）；仅工具调用经 `enqueueAuditOutbox` 记录。是否给管理端写操作接上审计待定。

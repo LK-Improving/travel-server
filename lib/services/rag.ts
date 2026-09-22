@@ -11,6 +11,7 @@ import {
   searchChunksByKeyword,
 } from '../repositories/knowledge';
 import { embedQuery, embeddingIdentity, rerank } from './llm';
+import { rewriteQueryForSparse } from './queryRewrite';
 import { milvusVectorStore } from './vectorStore';
 
 // 切片时识别 URL，避免把链接从中间切断（URL 碎片会让模型编造链接）。
@@ -164,6 +165,8 @@ export class RagService {
     let sparseIds: string[] = [];
     let sparseBackend: SparseBackend | 'disabled' | 'failed' = 'disabled';
     if (config.ragHybridEnabled) {
+      // 改写只喂稀疏臂；稠密臂继续用原句（语义检索本就擅长长句）。
+      const sparseQuery = await rewriteQueryForSparse(cleanQuery);
       try {
         const { hits: rows, backend } = await this.keywordRouter.search(cleanQuery, {
           regions: options.regions ?? null,
@@ -171,6 +174,7 @@ export class RagService {
           limit: config.ragSparseTopK,
           minScore: config.ragSparseMinScore,
           variant: options.sparseVariant ?? null,
+          sparseQuery,
         });
         sparseIds = rows.map((row) => String(row.chunkId));
         sparseBackend = backend;
@@ -254,6 +258,9 @@ export class RagService {
     const identity = embeddingIdentity();
     const candidates: RetrievalSource[] = [];
 
+    // 改写一次即可（多知识库循环里复用），未开启时 rewriteQueryForSparse 直接返回原句。
+    const sparseQuery = await rewriteQueryForSparse(cleanQuery);
+
     for (const knowledgeBaseId of allowedKbs) {
       let denseScores = new Map<string, number>();
       try {
@@ -288,6 +295,7 @@ export class RagService {
             limit: Math.max(config.ragSparseTopK, safeLimit),
             minScore: config.ragSparseMinScore,
             variant: options.sparseVariant ?? null,
+            sparseQuery,
           });
           sparseIds = rows.map((row) => row.chunkId).filter(Boolean);
           sparseBackend = backend;

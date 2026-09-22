@@ -60,7 +60,9 @@ export class DocumentQueueUnavailableError extends Error {
 /** 入队文档解析任务。Redis 不可用时抛出，由调用方决定状态回滚。 */
 export async function enqueueDocumentJob(documentId: string): Promise<string> {
   try {
-    const job = await getDocumentQueue().add(DOCUMENT_JOB_NAME, { documentId }, { jobId: `doc:${documentId}` });
+    // BullMQ 禁止自定义 jobId 含 ':'（v5+ 起校验），否则 add() 直接抛 "Custom Id cannot contain :"，
+    // 导致每次上传都入队失败、文档永久停在 draft。用 '-' 作分隔。
+    const job = await getDocumentQueue().add(DOCUMENT_JOB_NAME, { documentId }, { jobId: `doc-${documentId}` });
     return String(job.id);
   } catch (error) {
     throw new DocumentQueueUnavailableError(error);

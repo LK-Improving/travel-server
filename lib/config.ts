@@ -104,6 +104,11 @@ export const config = {
   ragDenseTopK: envInt('RAG_DENSE_TOP_K', 20),
   ragSparseTopK: envInt('RAG_SPARSE_TOP_K', 20),
   ragRrfK: envInt('RAG_RRF_K', 60),
+  // 长自然语言查询改写（§7.2）：把整段口语问题压缩成关键词短查询，只喂给稀疏臂；
+  // 稠密臂仍用原句（语义检索本就擅长长句）。默认关闭，失败静默回退原句。
+  ragQueryRewriteEnabled: envBool('RAG_QUERY_REWRITE_ENABLED', false),
+  ragQueryRewriteMinChars: envInt('RAG_QUERY_REWRITE_MIN_CHARS', 24),
+  ragQueryRewriteModel: env('RAG_QUERY_REWRITE_MODEL'),
   ragSparseMinScore: envFloat('RAG_SPARSE_MIN_SCORE', 0.05),
   ragSparseBackend: env('RAG_SPARSE_BACKEND', 'pg_trgm').toLowerCase() as 'pg_trgm' | 'elasticsearch' | 'ab',
   ragAbEsPercent: envInt('RAG_AB_ES_PERCENT', 50),

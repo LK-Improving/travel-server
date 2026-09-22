@@ -1,0 +1,608 @@
+{
+  "variant": "elasticsearch",
+  "topK": 5,
+  "datasetVersion": "city-kb-kw-recall-v5",
+  "knowledgeBaseId": "26929070-a2a2-43ec-818a-ff1f6d53a996",
+  "off": {
+    "perDimension": {
+      "召回准确率": {
+        "total": 15,
+        "resolved": 15,
+        "recallAtK": 1,
+        "mrr": 0.9666666666666667
+      },
+      "错别字纠正": {
+        "total": 12,
+        "resolved": 12,
+        "recallAtK": 0.9166666666666666,
+        "mrr": 0.8333333333333334
+      },
+      "指代词问答": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 1,
+        "mrr": 0.9615384615384616
+      },
+      "多约束组合": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 1,
+        "mrr": 0.8525641025641024
+      },
+      "长自然语言": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 0.6923076923076923,
+        "mrr": 0.6346153846153846
+      }
+    },
+    "overall": {
+      "total": 66,
+      "resolved": 66,
+      "recallAtK": 0.9242424242424242,
+      "mrr": 0.8535353535353536
+    }
+  },
+  "on": {
+    "perDimension": {
+      "召回准确率": {
+        "total": 15,
+        "resolved": 15,
+        "recallAtK": 1,
+        "mrr": 0.9666666666666667
+      },
+      "错别字纠正": {
+        "total": 12,
+        "resolved": 12,
+        "recallAtK": 0.9166666666666666,
+        "mrr": 0.8333333333333334
+      },
+      "指代词问答": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 1,
+        "mrr": 0.9615384615384616
+      },
+      "多约束组合": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 1,
+        "mrr": 0.8525641025641024
+      },
+      "长自然语言": {
+        "total": 13,
+        "resolved": 13,
+        "recallAtK": 0.7692307692307693,
+        "mrr": 0.7692307692307693
+      }
+    },
+    "overall": {
+      "total": 66,
+      "resolved": 66,
+      "recallAtK": 0.9393939393939394,
+      "mrr": 0.8800505050505051
+    }
+  },
+  "delta": {
+    "召回准确率": {
+      "recallAtK": [
+        1,
+        1
+      ],
+      "mrr": [
+        0.9666666666666667,
+        0.9666666666666667
+      ],
+      "dRecall": 0
+    },
+    "错别字纠正": {
+      "recallAtK": [
+        0.9166666666666666,
+        0.9166666666666666
+      ],
+      "mrr": [
+        0.8333333333333334,
+        0.8333333333333334
+      ],
+      "dRecall": 0
+    },
+    "指代词问答": {
+      "recallAtK": [
+        1,
+        1
+      ],
+      "mrr": [
+        0.9615384615384616,
+        0.9615384615384616
+      ],
+      "dRecall": 0
+    },
+    "多约束组合": {
+      "recallAtK": [
+        1,
+        1
+      ],
+      "mrr": [
+        0.8525641025641024,
+        0.8525641025641024
+      ],
+      "dRecall": 0
+    },
+    "长自然语言": {
+      "recallAtK": [
+        0.6923076923076923,
+        0.7692307692307693
+      ],
+      "mrr": [
+        0.6346153846153846,
+        0.7692307692307693
+      ],
+      "dRecall": 0.07692307692307698
+    }
+  },
+  "changedCount": 13,
+  "rewrites": [
+    {
+      "caseId": "rec-001",
+      "dimension": "召回准确率",
+      "original": "缙云烧饼是什么来头",
+      "rewritten": "缙云烧饼是什么来头",
+      "changed": false
+    },
+    {
+      "caseId": "rec-002",
+      "dimension": "召回准确率",
+      "original": "西湖醋鱼属于哪个菜系",
+      "rewritten": "西湖醋鱼属于哪个菜系",
+      "changed": false
+    },
+    {
+      "caseId": "rec-003",
+      "dimension": "召回准确率",
+      "original": "普陀山是哪位菩萨的道场",
+      "rewritten": "普陀山是哪位菩萨的道场",
+      "changed": false
+    },
+    {
+      "caseId": "rec-004",
+      "dimension": "召回准确率",
+      "original": "江郎山是什么世界遗产",
+      "rewritten": "江郎山是什么世界遗产",
+      "changed": false
+    },
+    {
+      "caseId": "rec-005",
+      "dimension": "召回准确率",
+      "original": "南浔古镇门票多少钱",
+      "rewritten": "南浔古镇门票多少钱",
+      "changed": false
+    },
+    {
+      "caseId": "rec-006",
+      "dimension": "召回准确率",
+      "original": "乌镇戏剧节什么时候举办",
+      "rewritten": "乌镇戏剧节什么时候举办",
+      "changed": false
+    },
+    {
+      "caseId": "rec-007",
+      "dimension": "召回准确率",
+      "original": "天一阁是谁建造的",
+      "rewritten": "天一阁是谁建造的",
+      "changed": false
+    },
+    {
+      "caseId": "rec-008",
+      "dimension": "召回准确率",
+      "original": "鲁迅故里需要买门票吗",
+      "rewritten": "鲁迅故里需要买门票吗",
+      "changed": false
+    },
+    {
+      "caseId": "rec-009",
+      "dimension": "召回准确率",
+      "original": "金华火腿用的是什么猪",
+      "rewritten": "金华火腿用的是什么猪",
+      "changed": false
+    },
+    {
+      "caseId": "rec-010",
+      "dimension": "召回准确率",
+      "original": "台州府城墙门票多少钱",
+      "rewritten": "台州府城墙门票多少钱",
+      "changed": false
+    },
+    {
+      "caseId": "rec-011",
+      "dimension": "召回准确率",
+      "original": "云和梯田什么时候去最好",
+      "rewritten": "云和梯田什么时候去最好",
+      "changed": false
+    },
+    {
+      "caseId": "rec-012",
+      "dimension": "召回准确率",
+      "original": "雁荡山灵峰和大龙湫的门票",
+      "rewritten": "雁荡山灵峰和大龙湫的门票",
+      "changed": false
+    },
+    {
+      "caseId": "rec-013",
+      "dimension": "召回准确率",
+      "original": "舟山梭子蟹什么季节最肥",
+      "rewritten": "舟山梭子蟹什么季节最肥",
+      "changed": false
+    },
+    {
+      "caseId": "rec-014",
+      "dimension": "召回准确率",
+      "original": "莫干山以什么出名",
+      "rewritten": "莫干山以什么出名",
+      "changed": false
+    },
+    {
+      "caseId": "rec-015",
+      "dimension": "召回准确率",
+      "original": "三头一掌是哪里的菜",
+      "rewritten": "三头一掌是哪里的菜",
+      "changed": false
+    },
+    {
+      "caseId": "typo-001",
+      "dimension": "错别字纠正",
+      "original": "缙云烧并好吃吗",
+      "rewritten": "缙云烧并好吃吗",
+      "changed": false
+    },
+    {
+      "caseId": "typo-002",
+      "dimension": "错别字纠正",
+      "original": "西糊醋鱼怎么做",
+      "rewritten": "西糊醋鱼怎么做",
+      "changed": false
+    },
+    {
+      "caseId": "typo-003",
+      "dimension": "错别字纠正",
+      "original": "普驼山拜观音怎么安排",
+      "rewritten": "普驼山拜观音怎么安排",
+      "changed": false
+    },
+    {
+      "caseId": "typo-004",
+      "dimension": "错别字纠正",
+      "original": "江朗山门票多少",
+      "rewritten": "江朗山门票多少",
+      "changed": false
+    },
+    {
+      "caseId": "typo-005",
+      "dimension": "错别字纠正",
+      "original": "南寻古镇在哪里",
+      "rewritten": "南寻古镇在哪里",
+      "changed": false
+    },
+    {
+      "caseId": "typo-006",
+      "dimension": "错别字纠正",
+      "original": "天一各是谁建的",
+      "rewritten": "天一各是谁建的",
+      "changed": false
+    },
+    {
+      "caseId": "typo-007",
+      "dimension": "错别字纠正",
+      "original": "鲁讯故里要预约吗",
+      "rewritten": "鲁讯故里要预约吗",
+      "changed": false
+    },
+    {
+      "caseId": "typo-008",
+      "dimension": "错别字纠正",
+      "original": "金华火退怎么挑选",
+      "rewritten": "金华火退怎么挑选",
+      "changed": false
+    },
+    {
+      "caseId": "typo-009",
+      "dimension": "错别字纠正",
+      "original": "神先居的如意桥好玩吗",
+      "rewritten": "神先居的如意桥好玩吗",
+      "changed": false
+    },
+    {
+      "caseId": "typo-010",
+      "dimension": "错别字纠正",
+      "original": "云合梯田看日出住哪",
+      "rewritten": "云合梯田看日出住哪",
+      "changed": false
+    },
+    {
+      "caseId": "typo-011",
+      "dimension": "错别字纠正",
+      "original": "舟山棱子蟹几月吃",
+      "rewritten": "舟山棱子蟹几月吃",
+      "changed": false
+    },
+    {
+      "caseId": "typo-012",
+      "dimension": "错别字纠正",
+      "original": "莫干山的名宿推荐",
+      "rewritten": "莫干山的名宿推荐",
+      "changed": false
+    },
+    {
+      "caseId": "pron-001",
+      "dimension": "指代词问答",
+      "original": "那个国家级非遗的烧饼是用什么炉子烤的",
+      "rewritten": "那个国家级非遗的烧饼是用什么炉子烤的",
+      "changed": false
+    },
+    {
+      "caseId": "pron-002",
+      "dimension": "指代词问答",
+      "original": "那座以梅干菜扣肉闻名的城市酿的酒用什么水",
+      "rewritten": "那座以梅干菜扣肉闻名的城市酿的酒用什么水",
+      "changed": false
+    },
+    {
+      "caseId": "pron-003",
+      "dimension": "指代词问答",
+      "original": "前面说的那座中国四大佛教名山在哪座城市",
+      "rewritten": "前面说的那座中国四大佛教名山在哪座城市",
+      "changed": false
+    },
+    {
+      "caseId": "pron-004",
+      "dimension": "指代词问答",
+      "original": "那个被称为世界第九大奇迹的石窟在哪里",
+      "rewritten": "那个被称为世界第九大奇迹的石窟在哪里",
+      "changed": false
+    },
+    {
+      "caseId": "pron-005",
+      "dimension": "指代词问答",
+      "original": "那座江南长城的门票多少钱",
+      "rewritten": "那座江南长城的门票多少钱",
+      "changed": false
+    },
+    {
+      "caseId": "pron-006",
+      "dimension": "指代词问答",
+      "original": "那道用两头乌猪后腿做的名产是什么",
+      "rewritten": "那道用两头乌猪后腿做的名产是什么",
+      "changed": false
+    },
+    {
+      "caseId": "pron-007",
+      "dimension": "指代词问答",
+      "original": "那个中国杨梅之乡的杨梅几月上市",
+      "rewritten": "那个中国杨梅之乡的杨梅几月上市",
+      "changed": false
+    },
+    {
+      "caseId": "pron-008",
+      "dimension": "指代词问答",
+      "original": "那座目前没有高铁直达的群岛城市怎么过去",
+      "rewritten": "那座目前没有高铁直达的群岛城市怎么过去",
+      "changed": false
+    },
+    {
+      "caseId": "pron-009",
+      "dimension": "指代词问答",
+      "original": "那个以千米廊棚闻名的古镇门票多少",
+      "rewritten": "那个以千米廊棚闻名的古镇门票多少",
+      "changed": false
+    },
+    {
+      "caseId": "pron-010",
+      "dimension": "指代词问答",
+      "original": "那座因电影后会无期取景而走红的岛叫什么",
+      "rewritten": "那座因电影后会无期取景而走红的岛叫什么",
+      "changed": false
+    },
+    {
+      "caseId": "pron-011",
+      "dimension": "指代词问答",
+      "original": "那个以三头一掌闻名的城市到底有多辣",
+      "rewritten": "那个以三头一掌闻名的城市到底有多辣",
+      "changed": false
+    },
+    {
+      "caseId": "pron-012",
+      "dimension": "指代词问答",
+      "original": "那座中国现存最早的私家藏书楼是谁建的",
+      "rewritten": "那座中国现存最早的私家藏书楼是谁建的",
+      "changed": false
+    },
+    {
+      "caseId": "pron-013",
+      "dimension": "指代词问答",
+      "original": "被称为最后的江南秘境的古村落指的是哪",
+      "rewritten": "被称为最后的江南秘境的古村落指的是哪",
+      "changed": false
+    },
+    {
+      "caseId": "multi-001",
+      "dimension": "多约束组合",
+      "original": "浙江哪个城市既有世界自然遗产又有5A景区",
+      "rewritten": "浙江哪个城市既有世界自然遗产又有5A景区",
+      "changed": false
+    },
+    {
+      "caseId": "multi-002",
+      "dimension": "多约束组合",
+      "original": "想带孩子去有沙滩又能玩水的海岛怎么选",
+      "rewritten": "想带孩子去有沙滩又能玩水的海岛怎么选",
+      "changed": false
+    },
+    {
+      "caseId": "multi-003",
+      "dimension": "多约束组合",
+      "original": "既想看丹霞地貌又想吃辣的城市是哪个",
+      "rewritten": "既想看丹霞地貌又想吃辣的城市是哪个",
+      "changed": false
+    },
+    {
+      "caseId": "multi-004",
+      "dimension": "多约束组合",
+      "original": "免费开放但需要预约的名人故里是哪里",
+      "rewritten": "免费开放但需要预约的名人故里是哪里",
+      "changed": false
+    },
+    {
+      "caseId": "multi-005",
+      "dimension": "多约束组合",
+      "original": "能看钱塘江大潮的观潮点在哪个城市",
+      "rewritten": "能看钱塘江大潮的观潮点在哪个城市",
+      "changed": false
+    },
+    {
+      "caseId": "multi-006",
+      "dimension": "多约束组合",
+      "original": "既能看云海又有网红桥的景区是哪个",
+      "rewritten": "既能看云海又有网红桥的景区是哪个",
+      "changed": false
+    },
+    {
+      "caseId": "multi-007",
+      "dimension": "多约束组合",
+      "original": "浙江哪个古镇免费开放还能坐乌篷船",
+      "rewritten": "浙江哪个古镇免费开放还能坐乌篷船",
+      "changed": false
+    },
+    {
+      "caseId": "multi-008",
+      "dimension": "多约束组合",
+      "original": "想看梯田日出又想住山上的民宿去哪",
+      "rewritten": "想看梯田日出又想住山上的民宿去哪",
+      "changed": false
+    },
+    {
+      "caseId": "multi-009",
+      "dimension": "多约束组合",
+      "original": "有溶洞还能避暑的地方是哪里",
+      "rewritten": "有溶洞还能避暑的地方是哪里",
+      "changed": false
+    },
+    {
+      "caseId": "multi-010",
+      "dimension": "多约束组合",
+      "original": "能看日出又是中国大陆最东端的岛",
+      "rewritten": "能看日出又是中国大陆最东端的岛",
+      "changed": false
+    },
+    {
+      "caseId": "multi-011",
+      "dimension": "多约束组合",
+      "original": "既有竹海又能看大熊猫的景区在哪",
+      "rewritten": "既有竹海又能看大熊猫的景区在哪",
+      "changed": false
+    },
+    {
+      "caseId": "multi-012",
+      "dimension": "多约束组合",
+      "original": "哪里能吃到料足汤鲜的海鲜面",
+      "rewritten": "哪里能吃到料足汤鲜的海鲜面",
+      "changed": false
+    },
+    {
+      "caseId": "multi-013",
+      "dimension": "多约束组合",
+      "original": "有千年府城和江南长城的城市是哪里",
+      "rewritten": "有千年府城和江南长城的城市是哪里",
+      "changed": false
+    },
+    {
+      "caseId": "nl-001",
+      "dimension": "长自然语言",
+      "original": "我打算下个月带爸妈去浙江玩，他们腿脚不太方便，想找个不用爬太多山、能慢慢逛的水乡古镇，最好人少一点，有什么推荐吗",
+      "rewritten": "浙江 水乡古镇 推荐 人少 适合老人 腿脚不便 不爬山 慢慢逛 下个月",
+      "changed": true
+    },
+    {
+      "caseId": "nl-002",
+      "dimension": "长自然语言",
+      "original": "朋友推荐我去吃一种用炉子烤的梅干菜肉馅饼，说是国家级非遗，想问下浙江哪里能吃到最正宗的、是什么做法",
+      "rewritten": "浙江 梅干菜肉馅饼 炉烤 国家级非遗 最正宗 哪里 做法 缙云烧饼",
+      "changed": true
+    },
+    {
+      "caseId": "nl-003",
+      "dimension": "长自然语言",
+      "original": "孩子暑假想看大熊猫，但又不想纯逛动物园，浙江有没有既能看竹海又能看熊猫的地方",
+      "rewritten": "浙江 竹海 大熊猫 暑假 亲子 推荐 非动物园",
+      "changed": true
+    },
+    {
+      "caseId": "nl-004",
+      "dimension": "长自然语言",
+      "original": "我特别喜欢吃生腌海鲜，听说浙江有个地方梭子蟹很有名，想问下几月份去吃最合适、哪里能吃到现捞的",
+      "rewritten": "浙江 梭子蟹 生腌海鲜 最佳月份 现捞 地点",
+      "changed": true
+    },
+    {
+      "caseId": "nl-005",
+      "dimension": "长自然语言",
+      "original": "想找个周末从杭州出发高铁半小时能到的地方，主要想看古镇和中西合璧的老宅子，有没有合适的",
+      "rewritten": "杭州 高铁 半小时 周末 古镇 中西合璧 老宅 推荐",
+      "changed": true
+    },
+    {
+      "caseId": "nl-006",
+      "dimension": "长自然语言",
+      "original": "想去看钱塘江大潮，但听说潮水每天时间不一样，想问下什么时候潮最大、去之前要注意什么",
+      "rewritten": "钱塘江大潮 潮最大 时间 观潮 注意事项",
+      "changed": true
+    },
+    {
+      "caseId": "nl-007",
+      "dimension": "长自然语言",
+      "original": "家里老人信佛，想去浙江拜观音，顺便也想看看海岛风光，能不能安排在同一个地方",
+      "rewritten": "浙江 普陀山 拜观音 海岛风光 老人 行程安排",
+      "changed": true
+    },
+    {
+      "caseId": "nl-008",
+      "dimension": "长自然语言",
+      "original": "我6月份想去浙江摘杨梅，听说有个中国杨梅之乡，想确认下具体是哪个月份、有什么品种",
+      "rewritten": "浙江 中国杨梅之乡 杨梅采摘 月份 品种 6月",
+      "changed": true
+    },
+    {
+      "caseId": "nl-009",
+      "dimension": "长自然语言",
+      "original": "打算自驾去浙江玩，想找那种民宿很成熟、可以避暑的山里待两天，最好还有点民国时期的老建筑可以看",
+      "rewritten": "浙江 自驾 避暑 山里 民宿 民国老建筑 两天",
+      "changed": true
+    },
+    {
+      "caseId": "nl-010",
+      "dimension": "长自然语言",
+      "original": "想买点浙江的特产送人，听说火腿很有名，想问下它是用什么原料做的、怎么挑选比较好",
+      "rewritten": "浙江 火腿 特产 送礼 原料 挑选",
+      "changed": true
+    },
+    {
+      "caseId": "nl-011",
+      "dimension": "长自然语言",
+      "original": "我对溶洞和地下奇观比较感兴趣，浙江有没有那种成因到现在都说不清楚、很有神秘感的地下石窟",
+      "rewritten": "浙江 溶洞 地下奇观 成因不明 神秘 地下石窟",
+      "changed": true
+    },
+    {
+      "caseId": "nl-012",
+      "dimension": "长自然语言",
+      "original": "想带老人去一个不用爬山的5A景区，最好有佛教文化、节奏慢一点，浙江哪里比较合适",
+      "rewritten": "浙江 5A景区 老人 不用爬山 佛教文化 节奏慢 推荐",
+      "changed": true
+    },
+    {
+      "caseId": "nl-013",
+      "dimension": "长自然语言",
+      "original": "听说浙江有个地方梯田特别美，很多摄影爱好者都去，想问下什么时候去最好、要不要在山上住一晚",
+      "rewritten": "浙江 云和梯田 摄影 最佳时间 山上住宿 一晚",
+      "changed": true
+    }
+  ]
+}

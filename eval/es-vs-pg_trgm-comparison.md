@@ -280,3 +280,38 @@ ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400
 - `lib/services/rag.ts`：`ragService.status()` 暴露 `sparseArmStats`，新增 `sparseArmStats` getter 与 `resetSparseArmStats()`。
 - `scripts/verifyAbGrayscale.ts` + `package.json` 的 `eval:ab`。
 - `eval/results-ab.json`（两遍：分发比例 / 每臂 Recall@5·MRR / 回落证明；调试明细 `eval/_ab_debug.json` 已被 `.gitignore` 忽略）。
+
+---
+
+## 12. 长自然语言查询改写（2026-09-23）：稀疏臂专用，默认关闭
+
+### 12.1 动机与设计
+- 已知（§9.2 / §11.4）：**稀疏-only** 路径对长自然语言召回差（ES-only 长 NL Recall@5=0.692），长句里的停用词、语气词稀释了关键词权重。
+- 设计：把长句压缩成「实体 + 意图」的短查询，**只喂稀疏臂（ES / pg_trgm）**；稠密臂仍用原句（语义检索本就擅长长句，改了反而丢信息）。
+- 开关：`RAG_QUERY_REWRITE_ENABLED`（**默认 false**）、`RAG_QUERY_REWRITE_MIN_CHARS`（默认 24）、`RAG_QUERY_REWRITE_MODEL`（可选，可指向非推理型小模型降本提速）。
+- 安全边界：改写失败（缺配置 / 超时 / HTTP 错误 / 返回为空 / 改写后不比原句短）一律**静默回退原句**，绝不中断检索；进程内 memo，避免 `retrieveProject` 多知识库循环里对同一 query 重复付费调用。
+- A/B 分流仍按**原句**哈希（`chooseBackend` 用原句，实际搜索用改写后文本），保证改写开关前后落到同一臂、灰度口径与可观测统计不漂移。
+
+### 12.2 实测（`eval/results-rewrite.json`，66 例 v5 集，稀疏-only ES 臂，同进程双臂对比）
+| 维度 | 改写关 Recall@5 / MRR | 改写开 Recall@5 / MRR | Δ |
+| --- | --- | --- | --- |
+| 长自然语言（13） | 0.692 / 0.635 | **0.769 / 0.769** | **+0.077 / +0.135** |
+| 其余维度（53） | 不变（短句未达 24 字阈值，未改写） | 不变 | 0 |
+| **总体（66）** | 0.924 / 0.854 | **0.939 / 0.880** | +0.015 / +0.026 |
+
+- 改写生效 **13/13**（全部长自然语言用例），无一条退化。OFF 臂复现了 §9.2 的 0.692 基线，说明评测口径可信。
+
+### 12.3 结论与定位
+1. 改写对**稀疏臂**确实有效：长 NL Recall@5 +7.7pp、MRR **+13.5pp**（MRR 提升更明显——关键词更纯，相关片排得更靠前）。
+2. 但 hybrid（dense + rerank 开启）下长 NL 已是 **1.000**（§10），改写在此无 headroom；因此**默认关闭**，定位为「稀疏-only / 降级场景」的增益项。
+3. 与 §11.4 一致：真正决定召回的是 dense + rerank；稀疏后端选择与查询改写只影响稀疏臂质量与成本。
+
+### 12.4 踩坑（重要）
+- 默认 `MODEL_PROVIDER=DEEPSEEK` 的模型是**推理型**（实测返回 `deepseek-flash`），会先输出 `reasoning_content` 消耗 token。改写最初把 `max_tokens` 设为 128，结果正文被推理吃光（`finish_reason:"length"`、`content` 为空或被截断），导致改写**静默失效**——双臂评测数字完全相同、`changedCount=0`，极易误判成「改写没用」。已把预算提到 512 并精简提示。
+- 教训：任何「小输出、强约束」的 LLM 调用，在推理型模型上都必须留足 `max_tokens`，并对「结果为空 / 未变短」做回退，否则失败会被静默吞掉。
+
+### 12.5 新增产物
+- `lib/services/queryRewrite.ts`（memo + sanitize + 静默回退）。
+- `lib/infra/elasticsearch.ts`：`KeywordSearchRouter.search` 新增 `sparseQuery` 选项（分流仍按原句哈希）。
+- `lib/services/rag.ts`：`retrieve` / `retrieveProject` 各改写一次后传给稀疏臂。
+- `lib/config.ts`：新增 3 个开关；`scripts/evaluateQueryRewrite.ts` + `package.json` 的 `eval:rewrite`；`eval/results-rewrite.json`。

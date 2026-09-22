@@ -1,0 +1,388 @@
+{
+  "variant": "elasticsearch",
+  "topK": 5,
+  "datasetVersion": "pg-trgm-kw-recall-v2-grounded",
+  "summary": {
+    "召回准确率": {
+      "total": 8,
+      "resolved": 8,
+      "recallAtK": 1,
+      "mrr": 1
+    },
+    "错别字纠正": {
+      "total": 5,
+      "resolved": 5,
+      "recallAtK": 1,
+      "mrr": 1
+    },
+    "指代词问答": {
+      "total": 5,
+      "resolved": 5,
+      "recallAtK": 0.8,
+      "mrr": 0.8
+    },
+    "overall": {
+      "total": 18,
+      "resolved": 18,
+      "recallAtK": 0.9444444444444444,
+      "mrr": 0.9444444444444444
+    }
+  },
+  "results": [
+    {
+      "caseId": "recall-001",
+      "question": "西湖边免费的景点有哪些",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-002",
+      "question": "杭州灵隐寺的门票价格是多少",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-003",
+      "question": "西溪湿地建议游览多长时间",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-004",
+      "question": "雷峰塔可以登塔俯瞰西湖吗",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-005",
+      "question": "西湖龙井茶的核心产区在哪里",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-006",
+      "question": "从杭州东站怎么去西湖",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-007",
+      "question": "苏堤是哪个朝代谁主持修筑的",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-008",
+      "question": "岳王庙纪念的是哪位英雄",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-001",
+      "question": "西胡边免费的景点有哪些",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-002",
+      "question": "灵隐寺的门票价恪是多少",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-003",
+      "question": "西溪湿弟建议游览多长时间",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-004",
+      "question": "雷峰搭可以登塔俯瞰西湖吗",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-005",
+      "question": "苏堤是哪个朝代谁修竺的",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-001",
+      "question": "它附近有推荐的餐厅吗",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-002",
+      "question": "那里的门票贵不贵",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-003",
+      "question": "这个地方有什么特色活动可以玩",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "pron-004",
+      "question": "上面说的那座塔能登顶看全景吗",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-005",
+      "question": "这趟行程的最佳季节是什么时候",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    }
+  ]
+}

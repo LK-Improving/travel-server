@@ -1,0 +1,7 @@
+{
+  "runId": "1ef74f2e-b561-49e4-9e74-62c1a882ebf0",
+  "backend": "elasticsearch",
+  "kbId": "26929070-a2a2-43ec-818a-ff1f6d53a996",
+  "datasetVersion": "city-kb-kw-recall-v5",
+  "cases": 66
+}

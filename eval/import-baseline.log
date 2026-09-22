@@ -1,0 +1,32 @@
+stashing variant= elasticsearch kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v2-grounded
+created runId= a75e9f31-62ef-4efd-a2b5-c1dbf0279a42
+saved 18 cases
+DONE runId= a75e9f31-62ef-4efd-a2b5-c1dbf0279a42
+stashing variant= pg_trgm kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v2-grounded
+created runId= 6c2a47bb-d037-4efa-853a-c893a6e3ef2d
+saved 18 cases
+DONE runId= 6c2a47bb-d037-4efa-853a-c893a6e3ef2d
+stashing variant= pg_trgm kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v3-grounded
+created runId= 61f33b69-9e26-4764-af17-baafd31fdda2
+saved 50 cases
+DONE runId= 61f33b69-9e26-4764-af17-baafd31fdda2
+stashing variant= elasticsearch kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v3-grounded
+created runId= 66f0b8b0-db43-45ff-82bf-08470a21a425
+saved 50 cases
+DONE runId= 66f0b8b0-db43-45ff-82bf-08470a21a425
+stashing variant= pg_trgm kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v4-grounded
+created runId= f227b860-be0b-4700-b903-e0d92cbfe1b0
+saved 71 cases
+DONE runId= f227b860-be0b-4700-b903-e0d92cbfe1b0
+stashing variant= elasticsearch kb= fded519d-0984-49b9-8a72-d2db0ad983aa dataset= pg-trgm-kw-recall-v4-grounded
+created runId= 71572fb8-4255-453e-a338-54098888e023
+saved 71 cases
+DONE runId= 71572fb8-4255-453e-a338-54098888e023
+stashing variant= pg_trgm kb= 26929070-a2a2-43ec-818a-ff1f6d53a996 dataset= city-kb-kw-recall-v5
+created runId= 1399f168-dfe9-4d43-bd54-a44980328882
+saved 66 cases
+DONE runId= 1399f168-dfe9-4d43-bd54-a44980328882
+stashing variant= elasticsearch kb= 26929070-a2a2-43ec-818a-ff1f6d53a996 dataset= city-kb-kw-recall-v5
+created runId= 1ef74f2e-b561-49e4-9e74-62c1a882ebf0
+saved 66 cases
+DONE runId= 1ef74f2e-b561-49e4-9e74-62c1a882ebf0

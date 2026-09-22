@@ -1,443 +1,118 @@
 # travel-server
 
-智能景点介绍服务端，基于 Express、LangChain 和 OpenAI 兼容接口，为前端提供旅游规划推荐和 AI 流式对话能力。
+智能旅行 RAG 平台服务端。
 
-## 功能
+- **起源**：功能完整复刻自 Python 版 `travel-python`（FastAPI + LangGraph，31 张表、60+ 端点，含多租户 / 评测 / 审计 / Agent）。
+- **框架**：已在地将 Express 版改造为 **Next.js 16 App Router + TypeScript**，Route Handlers 天然承担 SSE 流式与 REST。
+- **基础设施**：全量对齐 Python 版 —— Milvus（向量）、Elasticsearch（稀疏/全文）、PostgreSQL（业务 + LangGraph checkpoint）、Redis / BullMQ（异步任务队列，替代 RQ）、MinIO（对象存储）。
 
-- 旅游规划推荐：根据城市、预算、天数生成结构化 JSON 行程。
-- AI 对话：通过 SSE 返回流式聊天内容，适合前端逐字/分段渲染。
-- RAG 对话：新增独立路由，将资料写入 Supabase pgvector 后检索增强回答。
-- 多模型供应商：支持 DeepSeek、硅基流动、小米大模型等 OpenAI 兼容服务。
-- 跨域支持：已启用 `cors()`，方便本地前后端联调。
+> 说明：原 Express 版自带的 `favorites` / `memories` / `travel` 三个模块在 Python 版中并不存在，迁移时按用户决策**保留**，并按 Next.js Route Handler 重写（见下文「保留的 Node 版模块」）。
 
 ## 技术栈
 
-- Node.js + Express
-- LangChain `@langchain/openai`
-- Supabase PostgreSQL + pgvector
-- Supabase JS SDK
-- Server-Sent Events（SSE）
-- dotenv
+- Next.js 16（App Router）+ TypeScript（strict）
+- LangGraph JS（`@langchain/langgraph` + Postgres checkpoint，与 Python 版共用表结构，会话可跨语言恢复）
+- Milvus `@zilliz/milvus2-sdk-node`、Elasticsearch（fetch 直连）、BullMQ + ioredis、MinIO `minio`
+- PostgreSQL `pg` 连接池、JWT `jose`、精确金额 `decimal.js`、校验 `zod`
+- 混合检索（稠密 + 稀疏 + RRF + rerank）、意图分类、上下文压缩、Skill 系统、工具策略审批、韧性治理（限流 / 熔断 / 缓存）
 
 ## 目录结构
 
 ```txt
-src/
-  index.js                  # Express 入口
-  routers/
-    travel.js               # 旅游推荐与聊天路由
-    travelRag.js            # RAG 文档入库、检索与聊天路由
-  services/
-    travelServer.js         # 大模型初始化与业务调用
-    ragServer.js            # RAG 切片、embedding、检索增强生成
-    supabaseClient.js       # Supabase JS SDK 客户端
-    supabaseRagStore.js     # Supabase pgvector 存储
-  utils/
-    streamUtils.js          # SSE 响应工具
-```
-
-## 安装
-
-```bash
-npm install
+app/api/                # Next.js Route Handlers（REST + SSE）
+  auth/                 # 注册 / 登录 / 当前用户
+  admin/                # 运营台：知识库、文档、评测、检索调试、审计、模型路由、项目、Agent
+  rag/                  # RAG 对话 / 工具 / 技能
+  platform/agent/       # 平台 Agent（含工具审批）
+  public/projects/      # 面向 C 端的多租户项目对话
+  favorites/            # 用户收藏（保留模块）
+  memories/             # 用户长短记忆（保留模块）
+  travel/               # 旅游规划推荐 + 流式对话（保留模块）
+lib/
+  config.ts             # 运行时配置（全部从环境变量读取）
+  errors.ts             # 统一错误类型与信封
+  http.ts               # 响应信封 / CORS / 鉴权解析 / SSE 适配
+  sse.ts                # SSE 事件序列化（与 Python 版对齐）
+  db/pool.ts            # pg 连接池
+  infra/                # milvus / elasticsearch / objectStorage / queue / checkpointer
+  auth/                 # token / passwords / subject（请求主体解析）
+  repositories/         # 32 张表的持久化访问
+  services/             # 业务逻辑：rag / llm / vectorStore / projects / admin / evaluation / agent runner / travel / favorites / userMemory ...
+  skills/               # 预算 / 行程规划 / 行程调整 Skill 注册
+  rag_base/             # 共享的 Agent 图、上下文管理、工具
+  utils/                # zodJson / json 等
+worker/                 # BullMQ 消费端（文档入库、评估等异步任务）
+scripts/                # 数据库初始化、Agent 运行时初始化、ES / Milvus 重建索引
+migrations/             # 增量 SQL（含 Python 版迁移逐条对齐）
 ```
 
 ## 环境变量
 
-在项目根目录创建 `.env` 文件：
+密钥仅在运行时从环境变量读取，不写入代码或版本库。核心变量如下（前缀 `DEEPSEEK_/GJLD_/XIAOMI_` 的供应商配置沿用例）。
 
-```env
-# 服务配置
-PORT=3000
+| 分类 | 变量 |
+| --- | --- |
+| 服务 | `PORT`、`CORS_ORIGINS` |
+| 数据库 | `DATABASE_URL`（业务）、`PG_URL`、`AUTH_DB_URL`、`AUTH_DB_PASSWORD`、`AUTH_TOKEN_SECRET` |
+| 模型 | `MODEL_PROVIDER`（`DEEPSEEK`/`GJLD`/`XIAOMI`）、`MODEL_MAX_TOKENS`、`LLM_TIMEOUT_MS`、`LLM_MAX_RETRIES`、`PLANNER_MODEL`、`ANSWER_MODEL`、`INTENT_MODEL`、`SUMMARY_MODEL`、`TOOL_MODEL`、`MEMORY_JUDGE_MODEL`、`MODEL_FALLBACK` |
+| Embedding / Rerank | `EMBEDDING_MODEL`、`EMBEDDING_API_KEY`、`EMBEDDING_BASE_URL`、`EMBEDDING_DIMENSION`、`EMBEDDING_BATCH_SIZE`、`RERANK_*` |
+| 向量 | `MILVUS_HOST`/`MILVUS_PORT`/`MILVUS_USER`/`MILVUS_PASSWORD`、`MILVUS_SEARCH_EF` |
+| 检索 | `ELASTICSEARCH_URL`、`ELASTICSEARCH_API_KEY`、`RAG_CHUNK_SIZE`、`RAG_MATCH_COUNT`、`RAG_HYBRID_ENABLED`、`RAG_RERANK_ENABLED`、`RAG_RRF_K` 等 |
+| 对象存储 | `OBJECT_STORAGE_ENDPOINT`、`OBJECT_STORAGE_ACCESS_KEY`、`OBJECT_STORAGE_SECRET_KEY`、`OBJECT_STORAGE_REGION`、`OBJECT_STORAGE_SECURE` |
+| 队列 | Redis（BullMQ 复用 `DATABASE_URL` 之外的独立 Redis，由 `lib/infra/queue.ts` 配置） |
+| 地图 | `AMAP_API_KEY`、`AMAP_MCP_ENABLED`、`AMAP_MCP_API_KEY` |
+| Agent | `AGENT_CHECKPOINT_DB_URL`、`AGENT_SSE_HEARTBEAT_MS` |
+| 记忆（保留模块） | `MEMORY_MESSAGE_LIMIT`、`MEMORY_SUMMARY_THRESHOLD`、`MEMORY_KEEP_LIMIT`、`MEMORY_KEEP_MESSAGES`、`MEMORY_REDUNDANT_THRESHOLD`、`MEMORY_NOVEL_THRESHOLD` |
 
-# 可选：额外允许访问 API 的前端域名，多个值用英文逗号分隔。
-# 本地 Vite 地址和当前生产前端地址已由代码默认支持。
-CORS_ORIGINS=https://travel-web-ruddy-kappa.vercel.app
+> 完整清单见 `lib/config.ts`（单一事实来源）。
 
-# 可选值：DEEPSEEK / GJLD / XIAOMI
-MODEL_PROVIDE=DEEPSEEK
-
-# 模型生成配置
-MODEL_MAX_TOKENS=1600
-LLM_TIMEOUT_MS=120000
-LLM_MAX_RETRIES=1
-
-# DeepSeek
-DEEPSEEK_API_KEY=your_deepseek_api_key
-DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
-DEEPSEEK_MODEL=deepseek-v4-flash
-
-# 硅基流动
-GJLD_API_KEY=your_siliconflow_api_key
-GJLD_BASE_URL=https://api.siliconflow.cn/v1
-GJLD_MODEL=deepseek-ai/DeepSeek-V4-Flash
-
-# 小米
-XIAOMI_API_KEY=your_xiaomi_api_key
-XIAOMI_BASE_URL=https://api.xiaomimimo.com/v1
-XIAOMI_MODEL=mimo-v2-flash
-
-# Supabase / RAG
-SUPABASE_PROJECT_REF=your_project_ref
-SUPABASE_URL=https://your_project_ref.supabase.co
-SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
-SUPABASE_DB_HOST=db.your_project_ref.supabase.co
-SUPABASE_DB_PORT=5432
-SUPABASE_DB_NAME=postgres
-SUPABASE_DB_USER=postgres
-SUPABASE_DB_PASSWORD=your_database_password
-SUPABASE_DB_SSL=true
-
-# 如本机或部署环境不支持 IPv6，建议使用 Supabase Dashboard 提供的 pooler 连接串
-# SUPABASE_DB_URL=postgresql://postgres.project-ref:password@aws-1-region.pooler.supabase.com:6543/postgres
-
-# Embedding 使用 OpenAI-compatible 接口
-EMBEDDING_API_KEY=your_embedding_api_key
-EMBEDDING_BASE_URL=https://api.siliconflow.cn/v1
-EMBEDDING_MODEL=BAAI/bge-m3
-EMBEDDING_BATCH_SIZE=16
-EMBEDDING_TIMEOUT_MS=60000
-
-RAG_CHUNK_SIZE=800
-RAG_CHUNK_OVERLAP=120
-RAG_MATCH_COUNT=5
-```
-
-注意：不要把真实 API Key 提交到代码仓库。
-
-## 启动
-
-开发模式：
+## 数据库初始化
 
 ```bash
-npm run dev
+npm run db:init                # 执行 migrations，创建 31+ 张业务表
+npm run db:init-agent-runtime  # 初始化 LangGraph checkpoint / Agent 运行时表
+npm run reindex:es             # 重建 Elasticsearch 索引
+npm run reindex:milvus         # 重建 Milvus 已发布向量
 ```
 
-生产/普通启动：
+迁移脚本从 Python 版逐条对齐（含 `travel_favorites`、`travel_user_memories`、`travel_user_memory_summaries` 等保留模块表），密码哈希向后兼容 Node 版 scrypt 格式，已有账号可直接登录。
+
+## 开发 / 构建
 
 ```bash
-npm start
+npm install
+npm run dev      # next dev -p 8000
+npm run build    # next build
+npm start        # next start -p 8000
+npm run worker   # 启动 BullMQ 消费端（另开一个进程）
+npm run typecheck
 ```
 
-默认服务地址：
+默认服务地址：`http://localhost:8000`。
 
-```txt
-http://localhost:3000
-```
+## API 概览
 
-## API
+所有响应统一信封：`{ "success": boolean, "data": ... }`；错误返回对应 HTTP 状态码 + `{ "success": false, "error": ... }`。鉴权为 `Bearer <JWT>`，平台 Agent 额外支持 `X-Client-Id`。
 
-### 健康检查
+- 鉴权：`POST /api/auth/register`、`POST /api/auth/login`、`GET /api/auth/me`
+- 运营台：`/api/admin/*`（知识库、文档、检索调试、评测运行、审计日志、模型选项 / 路由、项目与版本、Agent）
+- RAG：`POST /api/rag/chat`、`GET /api/rag/tools`、`GET /api/rag/skills`
+- 平台 Agent：`POST /api/platform/agent/chat`、`/api/platform/agent/approvals/:id`
+- C 端项目：`/api/public/projects/:id/conversations/:cid/chat`
+- 保留模块：`GET/POST /api/favorites`、`DELETE /api/favorites/:id`、`GET/DELETE /api/memories`、`GET /api/memories/summary`、`POST /api/travel/recommand`、`POST /api/travel/chat`（SSE）
 
-```http
-POST /api/heartbeat
-```
+### 保留的 Node 版模块（Python 版无对应）
 
-示例响应：
+- **收藏** `favorites`：按 `user_id + target_type + target_id`（非空）去重，重复收藏更新而非报错。
+- **记忆** `memories`：短期窗口（`travel_user_memories` 近 N 条）+ 长期摘要（`travel_user_memory_summaries`，由 LLM 增量压缩）。
+- **旅游规划** `travel`：
+  - `POST /api/travel/recommand` —— 按城市 / 预算 / 天数生成结构化 JSON 行程（沿用原拼写 `recommand` 以兼容既有前端）。
+  - `POST /api/travel/chat` —— SSE 流式对话；登录后自动注入并落盘用户记忆。SSE 事件：`chunk` / `complete` / `error` / `end`。
 
-```json
-{
-  "code": 200,
-  "msg": "服务正常启动",
-  "timestamp": 1782809715486
-}
-```
+## 部署
 
-### 旅游规划推荐
+基于 Next.js，部署到 Vercel / 自建 Node 服务时由平台自动识别，**无需** 旧版 `vercel.json` 的 `/(.*)->/api` 全量重写（该重写会破坏 App Router 路由，已删除）。环境变量按上表在部署平台配置，不要提交真实密钥。
 
-```http
-POST /api/travel/recommand
-Content-Type: application/json
-```
+## 迁移说明
 
-请求体：
-
-```json
-{
-  "city": "杭州",
-  "days": 3,
-  "budget": 1000
-}
-```
-
-成功响应：
-
-```json
-{
-  "success": true,
-  "content": {
-    "success": true,
-    "city": "杭州",
-    "days": 3,
-    "totalBudget": 1000,
-    "dailyItinerary": [],
-    "budgetBreakdown": {},
-    "tips": [],
-    "warnings": []
-  },
-  "usage": {}
-}
-```
-
-说明：当前路由名为 `/recommand`，与代码保持一致。
-
-### AI 流式对话
-
-```http
-POST /api/travel/chat
-Content-Type: application/json
-Accept: text/event-stream
-```
-
-请求体：
-
-```json
-{
-  "message": "用一句话介绍杭州西湖"
-}
-```
-
-响应头：
-
-```http
-Content-Type: text/event-stream; charset=utf-8
-Cache-Control: no-cache, no-transform
-Connection: keep-alive
-X-Accel-Buffering: no
-Transfer-Encoding: chunked
-```
-
-响应体示例：
-
-```txt
-: connected
-
-data: {"type":"chunk","content":"杭州"}
-
-data: {"type":"chunk","content":"西湖"}
-
-data: {"type":"complete","data":{"success":true,"reply":"杭州西湖..."}}
-
-event: end
-data: {"type":"end"}
-```
-
-使用 `curl` 验证流式输出：
-
-```bash
-curl -N -i -X POST http://localhost:3000/api/travel/chat \
-  -H "Content-Type: application/json" \
-  -H "Accept: text/event-stream" \
-  --data "{\"message\":\"用一句话介绍杭州西湖\"}"
-```
-
-### RAG 文档入库
-
-新增路由独立挂载在 `/api/travel-rag`，不会影响原有 `/api/travel/chat`。
-
-### RAG 状态检查
-
-```http
-GET /api/travel-rag/status
-```
-
-该接口会检查 Supabase JS SDK 配置、RAG 表和 Postgres 初始化是否正常。
-
-```http
-POST /api/travel-rag/documents
-Content-Type: application/json
-```
-
-请求体：
-
-```json
-{
-  "title": "杭州西湖资料",
-  "content": "西湖位于浙江省杭州市西湖区，是中国著名湖泊型景区……",
-  "metadata": {
-    "city": "杭州",
-    "source": "manual"
-  }
-}
-```
-
-说明：服务会在第一次调用时自动创建 `vector`、`pgcrypto` 扩展和 `travel_rag_documents` 表，并把长文本按 `RAG_CHUNK_SIZE` 切片后写入 Supabase。
-
-### RAG 检索
-
-```http
-POST /api/travel-rag/search
-Content-Type: application/json
-```
-
-请求体：
-
-```json
-{
-  "query": "西湖适合安排多久游览？",
-  "matchCount": 5
-}
-```
-
-如果没有命中满足阈值的资料，接口仍返回 200，`data` 为空数组，前端可按空状态展示，不需要进入错误态：
-
-```json
-{
-  "success": true,
-  "data": [],
-  "fallback": false,
-  "reason": "NO_MATCH",
-  "message": "未检索到满足条件的知识库片段"
-}
-```
-
-如果向量检索服务临时异常，接口也会尽量返回 200 和空数组，并带上 `fallback: true`，避免页面中断。
-
-### RAG 流式对话
-
-```http
-POST /api/travel-rag/chat
-Content-Type: application/json
-Accept: text/event-stream
-```
-
-请求体：
-
-```json
-{
-  "message": "根据资料帮我规划半天西湖游览路线",
-  "matchCount": 5
-}
-```
-
-响应体会先返回检索到的资料来源，再持续返回模型内容：
-
-```txt
-: connected
-
-data: {"type":"sources","data":[],"retrieval":{"reason":"NO_MATCH"}}
-
-data: {"type":"chunk","content":"可以"}
-
-data: {"type":"complete","data":{"success":true,"reply":"可以...","sources":[]}}
-
-event: end
-data: {"type":"end"}
-```
-
-### Agent Function Calling 流式对话
-
-新增 `/api/travel-agent` 用于学习 SSE + Function Calling 的组合方案，不影响原有 `/api/travel/chat` 和 `/api/travel-rag/chat`。
-
-查看可用工具：
-
-```http
-GET /api/travel-agent/tools
-```
-
-流式对话：
-
-```http
-POST /api/travel-agent/chat
-Content-Type: application/json
-Accept: text/event-stream
-```
-
-请求体：
-
-```json
-{
-  "message": "帮我规划明天杭州西湖半天路线，如果下雨给备选方案",
-  "matchCount": 5,
-  "city": "杭州"
-}
-```
-
-SSE 事件统一带有 `type`、`requestId`、`messageId`、`seq` 和 `timestamp`，前端可以用 `seq` 去重和排查问题：
-
-```txt
-event: connected
-data: {"type":"connected","requestId":"...","messageId":"...","seq":1,"data":{}}
-
-event: plan_result
-data: {"type":"plan_result","data":{"toolCalls":[]}}
-
-event: tool_start
-data: {"type":"tool_start","data":{"name":"search_knowledge_base"}}
-
-event: tool_result
-data: {"type":"tool_result","data":{"success":true}}
-
-event: sources
-data: {"type":"sources","data":{"sources":[]}}
-
-event: chunk
-data: {"type":"chunk","data":{"content":"可以"}}
-
-event: complete
-data: {"type":"complete","data":{"success":true}}
-```
-
-当前内置工具：
-
-- `search_knowledge_base`：调用现有 Supabase pgvector RAG 检索。
-- `get_weather`：教学用模拟天气工具，可替换成真实天气 API。
-- `search_poi`：教学用静态 POI 工具，可替换成地图/文旅 POI 服务。
-- `plan_route`：教学用规则路线工具，可替换成地图路线规划 API。
-
-如果部署到 Nginx 或其他网关后变成一次性返回，需要关闭代理缓冲，例如：
-
-```nginx
-proxy_buffering off;
-proxy_cache off;
-```
-
-## 常见问题
-
-### 请求超时
-
-旅游规划推荐会生成较长内容，模型可能响应较慢。可以尝试：
-
-- 降低 `MODEL_MAX_TOKENS`
-- 增大 `LLM_TIMEOUT_MS`
-- 减少提示词要求的输出长度
-- 使用 `/api/travel/chat` 流式接口改善前端等待体验
-
-### 硅基流动返回 400
-
-确认以下配置正确：
-
-- `MODEL_PROVIDE=GJLD`
-- `GJLD_BASE_URL=https://api.siliconflow.cn/v1`
-- `GJLD_MODEL=deepseek-ai/DeepSeek-V4-Flash`
-
-代码通过 LangChain 的 `ChatOpenAI` 并设置 `configuration.baseURL` 调用 OpenAI 兼容接口。
-
-### SSE 前端一次性渲染
-
-后端已经按 SSE 写入并在每次 `data: {...}\n\n` 后尝试 flush。如果本地 `curl -N` 能看到分段输出，但浏览器仍一次性渲染，优先检查：
-
-- 前端是否使用 `fetch` + `response.body.getReader()`
-- 是否调用了 `response.text()` 或 axios 普通请求
-- 代理服务器是否开启了 response buffering
-
-## 脚本
-
-```bash
-npm run dev      # nodemon 开发启动
-npm start        # node 启动
-npm test         # 当前未配置测试
-```
-
-## Vercel 部署
-
-后端项目根目录已包含 `api/index.js` 和 `vercel.json`：Vercel 会将 Express 应用作为 Serverless Function 部署，并把所有请求转发给它。
-
-在 Vercel 的 **travel-server → Settings → Environment Variables** 中配置 README 列出的模型、Supabase 和数据库变量；如使用自定义前端域名或 Preview 域名，将其加入 `CORS_ORIGINS`（多个域名用英文逗号分隔）。不要在仓库提交真实密钥。
-
-部署完成后，可访问：
-
-```txt
-https://travel-server-kappa.vercel.app/api-docs
-https://travel-server-kappa.vercel.app/api-docs.json
-```
+从 Python 版 `travel-python` 的复刻映射、基础设施对接要点、会话与密码兼容性等，见 [`MIGRATION.md`](./MIGRATION.md)。

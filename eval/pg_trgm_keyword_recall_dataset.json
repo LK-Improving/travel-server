@@ -1,0 +1,33 @@
+{
+  "datasetVersion": "pg-trgm-kw-recall-v2-grounded",
+  "description": "pg_trgm / Elasticsearch 关键词稀疏召回评测集（v2，已对齐真实知识库语料）。金标准（ground truth）由 goldKeywords 经 PostgreSQL 内容反查独立得到，不依赖被测后端，保证 pg_trgm 与 ES 可比。当前知识库仅 1 篇已发布文档《西湖带图片千问》(8 切片)，评测集问题均可在该文档内找到答案；goldKeywords 选取「主实体 + 至少一个上下文词」且保证在同一切片内共现，使金标准精确可解。",
+  "recallK": 5,
+  "dimensions": {
+    "召回准确率": "显式关键词查询，验证稀疏召回能否命中含关键词的切片",
+    "错别字纠正": "查询含错别字/形近字，goldKeywords 使用纠正后的正确词，验证三元组(pg_trgm)与分词(ES IK)的错字鲁棒性差异；ES 未开 fuzziness 时此类差异最明显",
+    "指代词问答": "查询使用代词/指代（它、那里、上面说的、这趟行程），goldKeywords 由 resolvedEntity 展开，验证纯关键字检索在弱信号/指代场景下的召回能力与上限"
+  },
+  "goldResolution": "chunk 为金标准当且仅当：包含主实体 goldKeywords[0]，且（当关键词>1 个时）至少包含其余关键词中的一个。该规则主实体保证主题相关、上下文词保证命中答题切片，避免『单一切片需包含全部词』导致的不可解。",
+  "cases": [
+    { "id": "recall-001", "dimension": "召回准确率", "question": "西湖边免费的景点有哪些", "goldKeywords": ["西湖", "免费", "景点"], "goldDocumentTitle": "西湖带图片千问", "note": "标准显式词查询，目标切片=门票/免费景点段" },
+    { "id": "recall-002", "dimension": "召回准确率", "question": "杭州灵隐寺的门票价格是多少", "goldKeywords": ["灵隐寺", "门票"], "goldDocumentTitle": "西湖带图片千问", "note": "实体+属性：灵隐寺门票在门票信息切片" },
+    { "id": "recall-003", "dimension": "召回准确率", "question": "西溪湿地建议游览多长时间", "goldKeywords": ["西溪湿地", "游览时间"], "goldDocumentTitle": "西湖带图片千问", "note": "实体+时效信息" },
+    { "id": "recall-004", "dimension": "召回准确率", "question": "雷峰塔可以登塔俯瞰西湖吗", "goldKeywords": ["雷峰塔", "俯瞰"], "goldDocumentTitle": "西湖带图片千问", "note": "地标+动作" },
+    { "id": "recall-005", "dimension": "召回准确率", "question": "西湖龙井茶的核心产区在哪里", "goldKeywords": ["龙井", "产区"], "goldDocumentTitle": "西湖带图片千问", "note": "特产+属性" },
+    { "id": "recall-006", "dimension": "召回准确率", "question": "从杭州东站怎么去西湖", "goldKeywords": ["杭州东站", "西湖", "交通"], "goldDocumentTitle": "西湖带图片千问", "note": "出发地+目的地+方式" },
+    { "id": "recall-007", "dimension": "召回准确率", "question": "苏堤是哪个朝代谁主持修筑的", "goldKeywords": ["苏堤", "北宋"], "goldDocumentTitle": "西湖带图片千问", "note": "地标+历史" },
+    { "id": "recall-008", "dimension": "召回准确率", "question": "岳王庙纪念的是哪位英雄", "goldKeywords": ["岳王庙", "岳飞"], "goldDocumentTitle": "西湖带图片千问", "note": "地标+人物" },
+
+    { "id": "typo-001", "dimension": "错别字纠正", "question": "西胡边免费的景点有哪些", "goldKeywords": ["西湖", "免费", "景点"], "goldDocumentTitle": "西湖带图片千问", "note": "西湖→西胡（音近形近），gold 用纠正词" },
+    { "id": "typo-002", "dimension": "错别字纠正", "question": "灵隐寺的门票价恪是多少", "goldKeywords": ["灵隐寺", "门票"], "goldDocumentTitle": "西湖带图片千问", "note": "价格→价恪（形近），gold 用纠正词" },
+    { "id": "typo-003", "dimension": "错别字纠正", "question": "西溪湿弟建议游览多长时间", "goldKeywords": ["西溪湿地", "游览时间"], "goldDocumentTitle": "西湖带图片千问", "note": "湿地→湿弟（音近），gold 用纠正词" },
+    { "id": "typo-004", "dimension": "错别字纠正", "question": "雷峰搭可以登塔俯瞰西湖吗", "goldKeywords": ["雷峰塔", "俯瞰"], "goldDocumentTitle": "西湖带图片千问", "note": "塔→搭（形近），gold 用纠正词" },
+    { "id": "typo-005", "dimension": "错别字纠正", "question": "苏堤是哪个朝代谁修竺的", "goldKeywords": ["苏堤", "北宋"], "goldDocumentTitle": "西湖带图片千问", "note": "修筑→修竺（形近），gold 用纠正词" },
+
+    { "id": "pron-001", "dimension": "指代词问答", "question": "它附近有推荐的餐厅吗", "resolvedEntity": "西湖", "goldKeywords": ["西湖", "餐厅", "美食"], "goldDocumentTitle": "西湖带图片千问", "note": "它=西湖，纯代词无关键词，靠残留词餐厅/美食" },
+    { "id": "pron-002", "dimension": "指代词问答", "question": "那里的门票贵不贵", "resolvedEntity": "灵隐寺", "goldKeywords": ["灵隐寺", "门票"], "goldDocumentTitle": "西湖带图片千问", "note": "那里=灵隐寺" },
+    { "id": "pron-003", "dimension": "指代词问答", "question": "这个地方有什么特色活动可以玩", "resolvedEntity": "西溪湿地", "goldKeywords": ["西溪湿地", "摇橹船"], "goldDocumentTitle": "西湖带图片千问", "note": "这个地方=西溪湿地" },
+    { "id": "pron-004", "dimension": "指代词问答", "question": "上面说的那座塔能登顶看全景吗", "resolvedEntity": "雷峰塔", "goldKeywords": ["雷峰塔", "俯瞰"], "goldDocumentTitle": "西湖带图片千问", "note": "上面说的塔=雷峰塔" },
+    { "id": "pron-005", "dimension": "指代词问答", "question": "这趟行程的最佳季节是什么时候", "resolvedEntity": "西湖", "goldKeywords": ["西湖", "季节"], "goldDocumentTitle": "西湖带图片千问", "note": "这趟行程=西湖/杭州" }
+  ]
+}

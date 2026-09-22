@@ -1,0 +1,1272 @@
+{
+  "variant": "pg_trgm",
+  "topK": 5,
+  "datasetVersion": "pg-trgm-kw-recall-v4-grounded",
+  "summary": {
+    "召回准确率": {
+      "total": 16,
+      "resolved": 16,
+      "recallAtK": 1,
+      "mrr": 1
+    },
+    "错别字纠正": {
+      "total": 13,
+      "resolved": 13,
+      "recallAtK": 0.9230769230769231,
+      "mrr": 0.9230769230769231
+    },
+    "指代词问答": {
+      "total": 14,
+      "resolved": 14,
+      "recallAtK": 0.7857142857142857,
+      "mrr": 0.6488095238095237
+    },
+    "多约束组合": {
+      "total": 14,
+      "resolved": 14,
+      "recallAtK": 0.7857142857142857,
+      "mrr": 0.7857142857142857
+    },
+    "长自然语言": {
+      "total": 14,
+      "resolved": 14,
+      "recallAtK": 0.6428571428571429,
+      "mrr": 0.6071428571428571
+    },
+    "overall": {
+      "total": 71,
+      "resolved": 71,
+      "recallAtK": 0.8309859154929577,
+      "mrr": 0.7969483568075116
+    }
+  },
+  "results": [
+    {
+      "caseId": "recall-001",
+      "question": "西湖边免费的景点有哪些",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-002",
+      "question": "杭州灵隐寺的门票价格是多少",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-003",
+      "question": "西溪湿地建议游览多长时间",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-004",
+      "question": "雷峰塔可以登塔俯瞰西湖吗",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-005",
+      "question": "西湖龙井茶的核心产区在哪里",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-006",
+      "question": "从杭州东站怎么去西湖",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-007",
+      "question": "苏堤是哪个朝代谁主持修筑的",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-008",
+      "question": "岳王庙纪念的是哪位英雄",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-009",
+      "question": "断桥残雪和白蛇传有什么关系",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-010",
+      "question": "三潭印月要坐船才能去吗",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-011",
+      "question": "平湖秋月适合什么时候去赏月",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-012",
+      "question": "六和塔能俯瞰钱塘江吗",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-013",
+      "question": "净慈寺的南屏晚钟在哪里",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-014",
+      "question": "飞来峰上有什么石刻造像",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-015",
+      "question": "花港观鱼主要看什么",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "recall-016",
+      "question": "曲院风荷夏天去合适吗",
+      "dimension": "召回准确率",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-001",
+      "question": "西胡边免费的景点有哪些",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-002",
+      "question": "灵隐寺的门票价恪是多少",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-003",
+      "question": "西溪湿弟建议游览多长时间",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-004",
+      "question": "雷峰搭可以登塔俯瞰西湖吗",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-005",
+      "question": "苏堤是哪个朝代谁修竺的",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-006",
+      "question": "雷峰搭门票多少钱",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-007",
+      "question": "西溪湿弟怎么走，要玩多久",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-008",
+      "question": "龙井查的核心产区在哪",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-009",
+      "question": "月王庙纪念的是谁",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "typo-010",
+      "question": "断桥残血在哪个堤上",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-011",
+      "question": "西溪湿弟可以坐摇橹般游芦苇荡吗",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-012",
+      "question": "雷峰搭门票多少钱，里面能坐电梯上去吗",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-013",
+      "question": "曲院风荷夏天看荷华合适吗",
+      "dimension": "错别字纠正",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-001",
+      "question": "它附近有推荐的餐厅吗",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.5
+    },
+    {
+      "caseId": "pron-002",
+      "question": "那里的门票贵不贵",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "pron-003",
+      "question": "前面提到的那个国家湿地公园有什么特色活动",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-004",
+      "question": "上面说的那座塔能登顶看全景吗",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333
+    },
+    {
+      "caseId": "pron-005",
+      "question": "这趟行程的最佳季节是什么时候",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "pron-006",
+      "question": "刚才提到的那座塔里面能坐电梯上去吗",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-007",
+      "question": "那个必须坐船才能去的岛叫什么",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "pron-008",
+      "question": "前面说的那个湿地公园有摇橹船可以坐吗",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-009",
+      "question": "这趟行程里提到的百年老字号有什么好吃的",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-010",
+      "question": "前面说的纪念岳飞的庙怎么去",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-011",
+      "question": "那座可以坐电梯登顶看全景的塔叫什么",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-012",
+      "question": "前面说的那个能听钟声的古刹在哪个山脚",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.25
+    },
+    {
+      "caseId": "pron-013",
+      "question": "上面说的那座可以俯瞰钱塘江大桥的古塔在哪",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-014",
+      "question": "前面说的那个百年老字号，除了小笼包还有什么招牌面食",
+      "dimension": "指代词问答",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-001",
+      "question": "带小孩去西湖，有哪些免费又适合散步的景点",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "attr-002",
+      "question": "夏天来西湖想看荷花去哪个景点",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-003",
+      "question": "冬天去西湖有什么特色景点值得看",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-004",
+      "question": "从杭州东站下车后怎么去西湖最方便",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-005",
+      "question": "想喝到正宗的龙井茶应该去哪里",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "attr-006",
+      "question": "西湖边哪个景点最适合赏月",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-007",
+      "question": "想找个能登高看西湖全景的地方",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-008",
+      "question": "杭州有什么本地特色面食值得推荐",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-009",
+      "question": "想找个能登高看江景、还能了解古塔建筑的塔",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-010",
+      "question": "带朋友去看《白蛇传》里白娘子许仙相会的那座桥，顺便听听传说",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-011",
+      "question": "带娃想看锦鲤和牡丹，还要能喂鱼拍照的古典园林",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-012",
+      "question": "不想爬楼梯，想坐电梯登塔看西湖全景，哪座塔行",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-013",
+      "question": "买正宗西湖龙井，逛茶园吃农家菜，去哪个村",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "attr-014",
+      "question": "傍晚看夕阳塔影还要俯瞰湖景，哪个景点满足",
+      "dimension": "多约束组合",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-001",
+      "question": "我第一次来杭州只有一天时间，想看西湖最经典的几个景点还要登雷峰塔，怎么安排比较好",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-002",
+      "question": "周末如果下雨去西湖还值得吗，有没有什么要提前准备的",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-003",
+      "question": "我坐飞机到萧山机场，请问怎么去西湖最快最省事",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-004",
+      "question": "来杭州想尝尝正宗的杭帮菜和老字号，有什么推荐",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "64fa96d4-4733-4818-a6eb-186a1aefa9b5",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-005",
+      "question": "记得有部电影在西溪湿地取景，具体是哪部，那个地方有什么好玩的",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-006",
+      "question": "西湖十景里面哪个最适合冬天去看雪景",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-007",
+      "question": "第一次来杭州只有一天，想看西湖最经典的几个景点，怎么安排一天的路线",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-008",
+      "question": "带孩子全家出游，想找个免费开放又能慢慢逛、还能看锦鲤和牡丹的古典园林",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-009",
+      "question": "老人腿脚不便不想爬山，想去三潭印月那个岛，要怎么乘船过去",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "95e9daa6-26bf-49a8-ab30-7655dcd8b9d9",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-010",
+      "question": "女朋友喜欢拍照，春天桃花柳树成荫还能骑车的长堤是哪",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldSourceIds": [
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-011",
+      "question": "夏天带爸妈怕热，想找个赏荷花又凉快舒服的湖边景点",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldSourceIds": [
+        "1b693f0e-5582-4f09-b1bc-33d1b4ba24b6",
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.5
+    },
+    {
+      "caseId": "nl-012",
+      "question": "中秋来杭州想找水面如镜临水品茶赏月的地方",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626",
+        "3a46e9c8-ad66-4a4f-a508-fb6960fb911b"
+      ],
+      "goldSourceIds": [
+        "25c8f04c-dc69-44f1-a2c2-4ea3cbe24626"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-013",
+      "question": "周末带娃去大片芦苇和鸟的地方坐木船，最好人少",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [],
+      "goldSourceIds": [
+        "3fdfa6d5-020f-4f18-8930-0b357c6f54d5",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-014",
+      "question": "从萧山机场落地拖着行李不想折腾，怎么最顺路地进西湖景区",
+      "dimension": "长自然语言",
+      "backend": "pg_trgm",
+      "retrievedSourceIds": [
+        "33efe41b-3dc5-432f-a0e0-cfa0a5eef595",
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldSourceIds": [
+        "c67bf491-a7b0-4e73-aca3-66546f6f5a76"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    }
+  ]
+}

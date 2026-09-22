@@ -1,4 +1,40 @@
-node_modules
-dist
-.env
-.env.local
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# eval scratch dumps (keep datasets / reports / results, ignore _* debug)
+/eval/_*
+
+# one-off scratch/debug scripts (keep the real npm-run scripts)
+/scripts/_*
+
+# vercel
+.vercel

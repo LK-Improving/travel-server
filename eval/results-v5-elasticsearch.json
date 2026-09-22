@@ -1,0 +1,1388 @@
+{
+  "variant": "elasticsearch",
+  "topK": 5,
+  "datasetVersion": "city-kb-kw-recall-v5",
+  "summary": {
+    "召回准确率": {
+      "total": 15,
+      "resolved": 15,
+      "recallAtK": 1,
+      "mrr": 1
+    },
+    "错别字纠正": {
+      "total": 12,
+      "resolved": 12,
+      "recallAtK": 0.9166666666666666,
+      "mrr": 0.9166666666666666
+    },
+    "指代词问答": {
+      "total": 13,
+      "resolved": 13,
+      "recallAtK": 1,
+      "mrr": 0.9487179487179487
+    },
+    "多约束组合": {
+      "total": 13,
+      "resolved": 13,
+      "recallAtK": 1,
+      "mrr": 0.9102564102564101
+    },
+    "长自然语言": {
+      "total": 13,
+      "resolved": 13,
+      "recallAtK": 0.6923076923076923,
+      "mrr": 0.5897435897435896
+    },
+    "overall": {
+      "total": 66,
+      "resolved": 66,
+      "recallAtK": 0.9242424242424242,
+      "mrr": 0.8762626262626264
+    }
+  },
+  "results": [
+    {
+      "caseId": "rec-001",
+      "question": "缙云烧饼是什么来头",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3"
+      ],
+      "goldSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-002",
+      "question": "西湖醋鱼属于哪个菜系",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "f4573604-e84e-2b39-e45d-3e0f020b9748",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "db173464-3e10-da3d-770e-38519316503e",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "f4573604-e84e-2b39-e45d-3e0f020b9748",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-003",
+      "question": "普陀山是哪位菩萨的道场",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "62604749-0fc3-4c2d-b4d3-76b90998301c",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-004",
+      "question": "江郎山是什么世界遗产",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "8adc09be-b45e-6fb2-80b2-16430397236c"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-005",
+      "question": "南浔古镇门票多少钱",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "e9727c4e-531b-9694-a918-78ee614d17d2"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-006",
+      "question": "乌镇戏剧节什么时候举办",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldSourceIds": [
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-007",
+      "question": "天一阁是谁建造的",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a",
+        "a5cc3787-62be-59c6-5ec5-d68e1e993c91",
+        "1e92dc17-98d5-76c1-1e2d-90dde4776cb7",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe"
+      ],
+      "goldSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-008",
+      "question": "鲁迅故里需要买门票吗",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc",
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "ba51c037-39c5-da92-298d-370957389975",
+        "4d2807bc-7c66-d494-c4f8-8827d8d414cc"
+      ],
+      "goldSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-009",
+      "question": "金华火腿用的是什么猪",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "f61f8ff9-1463-c696-efce-3958005903b5",
+        "a410aa62-af8d-1c5e-54db-ae94cedddf7d",
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb",
+        "60cc8c2f-2e7e-d097-0a87-b49878162803"
+      ],
+      "goldSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-010",
+      "question": "台州府城墙门票多少钱",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575",
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13"
+      ],
+      "goldSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-011",
+      "question": "云和梯田什么时候去最好",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldSourceIds": [
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-012",
+      "question": "雁荡山灵峰和大龙湫的门票",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "ef8c5a7e-2cbd-e36d-3b6e-fc73680736bb",
+        "8adc09be-b45e-6fb2-80b2-16430397236c",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d"
+      ],
+      "goldSourceIds": [
+        "8adc09be-b45e-6fb2-80b2-16430397236c",
+        "ef8c5a7e-2cbd-e36d-3b6e-fc73680736bb"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-013",
+      "question": "舟山梭子蟹什么季节最肥",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2"
+      ],
+      "goldSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-014",
+      "question": "莫干山以什么出名",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "rec-015",
+      "question": "三头一掌是哪里的菜",
+      "dimension": "召回准确率",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23"
+      ],
+      "goldSourceIds": [
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-001",
+      "question": "缙云烧并好吃吗",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-002",
+      "question": "西糊醋鱼怎么做",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "f4573604-e84e-2b39-e45d-3e0f020b9748",
+        "db173464-3e10-da3d-770e-38519316503e",
+        "9e766024-c21c-aa3f-b22a-6ae48f253173",
+        "28aaac78-3668-473c-ea64-4889ed76c474"
+      ],
+      "goldSourceIds": [
+        "f4573604-e84e-2b39-e45d-3e0f020b9748",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-003",
+      "question": "普驼山拜观音怎么安排",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-004",
+      "question": "江朗山门票多少",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-005",
+      "question": "南寻古镇在哪里",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "typo-006",
+      "question": "天一各是谁建的",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a",
+        "a5cc3787-62be-59c6-5ec5-d68e1e993c91",
+        "1e92dc17-98d5-76c1-1e2d-90dde4776cb7",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "62604749-0fc3-4c2d-b4d3-76b90998301c"
+      ],
+      "goldSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-007",
+      "question": "鲁讯故里要预约吗",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "ba51c037-39c5-da92-298d-370957389975",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c"
+      ],
+      "goldSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-008",
+      "question": "金华火退怎么挑选",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "f61f8ff9-1463-c696-efce-3958005903b5",
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb",
+        "60cc8c2f-2e7e-d097-0a87-b49878162803",
+        "a410aa62-af8d-1c5e-54db-ae94cedddf7d"
+      ],
+      "goldSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-009",
+      "question": "神先居的如意桥好玩吗",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc",
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13"
+      ],
+      "goldSourceIds": [
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-010",
+      "question": "云合梯田看日出住哪",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldSourceIds": [
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-011",
+      "question": "舟山棱子蟹几月吃",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0"
+      ],
+      "goldSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "typo-012",
+      "question": "莫干山的名宿推荐",
+      "dimension": "错别字纠正",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-001",
+      "question": "那个国家级非遗的烧饼是用什么炉子烤的",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "f61f8ff9-1463-c696-efce-3958005903b5",
+        "8adc09be-b45e-6fb2-80b2-16430397236c"
+      ],
+      "goldSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-002",
+      "question": "那座以梅干菜扣肉闻名的城市酿的酒用什么水",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc",
+        "4d2807bc-7c66-d494-c4f8-8827d8d414cc",
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9"
+      ],
+      "goldSourceIds": [
+        "4d2807bc-7c66-d494-c4f8-8827d8d414cc"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-003",
+      "question": "前面说的那座中国四大佛教名山在哪座城市",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-004",
+      "question": "那个被称为世界第九大奇迹的石窟在哪里",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "9e766024-c21c-aa3f-b22a-6ae48f253173",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-005",
+      "question": "那座江南长城的门票多少钱",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "9e766024-c21c-aa3f-b22a-6ae48f253173",
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c"
+      ],
+      "goldSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-006",
+      "question": "那道用两头乌猪后腿做的名产是什么",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "8adc09be-b45e-6fb2-80b2-16430397236c",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-007",
+      "question": "那个中国杨梅之乡的杨梅几月上市",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "a5cc3787-62be-59c6-5ec5-d68e1e993c91",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldSourceIds": [
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-008",
+      "question": "那座目前没有高铁直达的群岛城市怎么过去",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "ef8c5a7e-2cbd-e36d-3b6e-fc73680736bb",
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333
+    },
+    {
+      "caseId": "pron-009",
+      "question": "那个以千米廊棚闻名的古镇门票多少",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4",
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44",
+        "43d5716a-96f6-c6d5-1d20-71f0b122573e",
+        "e9727c4e-531b-9694-a918-78ee614d17d2",
+        "d8055d68-badc-de98-dc10-093af939eacd"
+      ],
+      "goldSourceIds": [
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-010",
+      "question": "那座因电影后会无期取景而走红的岛叫什么",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "9e766024-c21c-aa3f-b22a-6ae48f253173",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "f4573604-e84e-2b39-e45d-3e0f020b9748"
+      ],
+      "goldSourceIds": [
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-011",
+      "question": "那个以三头一掌闻名的城市到底有多辣",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86"
+      ],
+      "goldSourceIds": [
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-012",
+      "question": "那座中国现存最早的私家藏书楼是谁建的",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "62604749-0fc3-4c2d-b4d3-76b90998301c",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldSourceIds": [
+        "4976ba52-99f9-0804-ebf3-fd9ecdf48c8a"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "pron-013",
+      "question": "被称为最后的江南秘境的古村落指的是哪",
+      "dimension": "指代词问答",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "9e766024-c21c-aa3f-b22a-6ae48f253173",
+        "e3ca2d31-077d-4523-7320-4b92ce3945d3"
+      ],
+      "goldSourceIds": [
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-001",
+      "question": "浙江哪个城市既有世界自然遗产又有5A景区",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "db173464-3e10-da3d-770e-38519316503e",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "ef8c5a7e-2cbd-e36d-3b6e-fc73680736bb",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-002",
+      "question": "想带孩子去有沙滩又能玩水的海岛怎么选",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333
+    },
+    {
+      "caseId": "multi-003",
+      "question": "既想看丹霞地貌又想吃辣的城市是哪个",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "1dc3c904-c242-6ee2-41cc-36531d4084c9"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-004",
+      "question": "免费开放但需要预约的名人故里是哪里",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "ba51c037-39c5-da92-298d-370957389975"
+      ],
+      "goldSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "0f1081b4-582d-53fd-f33f-aed9e306eccc"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-005",
+      "question": "能看钱塘江大潮的观潮点在哪个城市",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44",
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "ed51670f-6d56-a113-5d0e-c0f3a84ec3cc"
+      ],
+      "goldSourceIds": [
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-006",
+      "question": "既能看云海又有网红桥的景区是哪个",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad"
+      ],
+      "goldSourceIds": [
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-007",
+      "question": "浙江哪个古镇免费开放还能坐乌篷船",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e",
+        "e9727c4e-531b-9694-a918-78ee614d17d2",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "304e8b9d-fe13-369b-04b1-01f3ee924b2c",
+        "e9727c4e-531b-9694-a918-78ee614d17d2",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-008",
+      "question": "想看梯田日出又想住山上的民宿去哪",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldSourceIds": [
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.5
+    },
+    {
+      "caseId": "multi-009",
+      "question": "有溶洞还能避暑的地方是哪里",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "60cc8c2f-2e7e-d097-0a87-b49878162803",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad"
+      ],
+      "goldSourceIds": [
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-010",
+      "question": "能看日出又是中国大陆最东端的岛",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1",
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-011",
+      "question": "既有竹海又能看大熊猫的景区在哪",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "8adc09be-b45e-6fb2-80b2-16430397236c"
+      ],
+      "goldSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "d8055d68-badc-de98-dc10-093af939eacd"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-012",
+      "question": "哪里能吃到料足汤鲜的海鲜面",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "e3ca2d31-077d-4523-7320-4b92ce3945d3",
+        "28aaac78-3668-473c-ea64-4889ed76c474",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751"
+      ],
+      "goldSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "multi-013",
+      "question": "有千年府城和江南长城的城市是哪里",
+      "dimension": "多约束组合",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575",
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "229f0263-bfbe-7d75-1558-51951f8ff420",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-001",
+      "question": "我打算下个月带爸妈去浙江玩，他们腿脚不太方便，想找个不用爬太多山、能慢慢逛的水乡古镇，最好人少一点，有什么推荐吗",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "1e92dc17-98d5-76c1-1e2d-90dde4776cb7",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-002",
+      "question": "朋友推荐我去吃一种用炉子烤的梅干菜肉馅饼，说是国家级非遗，想问下浙江哪里能吃到最正宗的、是什么做法",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5",
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b",
+        "4d2807bc-7c66-d494-c4f8-8827d8d414cc",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9"
+      ],
+      "goldSourceIds": [
+        "de1bf546-8820-edde-b97b-ebca7cbbfbc8"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-003",
+      "question": "孩子暑假想看大熊猫，但又不想纯逛动物园，浙江有没有既能看竹海又能看熊猫的地方",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "8adc09be-b45e-6fb2-80b2-16430397236c"
+      ],
+      "goldSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "d8055d68-badc-de98-dc10-093af939eacd"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-004",
+      "question": "我特别喜欢吃生腌海鲜，听说浙江有个地方梭子蟹很有名，想问下几月份去吃最合适、哪里能吃到现捞的",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "1e92dc17-98d5-76c1-1e2d-90dde4776cb7",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "62604749-0fc3-4c2d-b4d3-76b90998301c",
+        "e3ca2d31-077d-4523-7320-4b92ce3945d3",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldSourceIds": [
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-005",
+      "question": "想找个周末从杭州出发高铁半小时能到的地方，主要想看古镇和中西合璧的老宅子，有没有合适的",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "8e6b5298-b9bd-a6a8-d3ae-5a79aacfb4f1"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-006",
+      "question": "想去看钱塘江大潮，但听说潮水每天时间不一样，想问下什么时候潮最大、去之前要注意什么",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "2eae079c-2ce7-87d1-d133-132024c9a6ad",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f"
+      ],
+      "goldSourceIds": [
+        "e772e4c5-c71c-6898-58dc-5aa2cfd792b4",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-007",
+      "question": "家里老人信佛，想去浙江拜观音，顺便也想看看海岛风光，能不能安排在同一个地方",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "0bd85a48-dee4-9433-6890-4639004afab9",
+        "33ccc02f-1e15-80eb-2e66-5c3398b8a2e2",
+        "9d9eac38-f40e-b3f7-45b3-679242fac6fe",
+        "7f472e76-c5c5-2b41-aabd-e3cef9a3243e"
+      ],
+      "goldSourceIds": [
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "0bd85a48-dee4-9433-6890-4639004afab9"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-008",
+      "question": "我6月份想去浙江摘杨梅，听说有个中国杨梅之乡，想确认下具体是哪个月份、有什么品种",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3",
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13"
+      ],
+      "goldSourceIds": [
+        "1cadc9cf-2ec3-aeaf-124e-f22333fd14df",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333
+    },
+    {
+      "caseId": "nl-009",
+      "question": "打算自驾去浙江玩，想找那种民宿很成熟、可以避暑的山里待两天，最好还有点民国时期的老建筑可以看",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "4ed56269-9217-14e9-0911-34cbbc6f8c44"
+      ],
+      "goldSourceIds": [
+        "0b3990e4-0198-aa8b-853c-6a0fc0243c02",
+        "d8055d68-badc-de98-dc10-093af939eacd",
+        "9119e440-0f60-db84-86f0-e0768d4c00d3"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-010",
+      "question": "想买点浙江的特产送人，听说火腿很有名，想问下它是用什么原料做的、怎么挑选比较好",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb"
+      ],
+      "goldSourceIds": [
+        "f61f8ff9-1463-c696-efce-3958005903b5"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-011",
+      "question": "我对溶洞和地下奇观比较感兴趣，浙江有没有那种成因到现在都说不清楚、很有神秘感的地下石窟",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00",
+        "14a6473c-a3c6-72aa-5d81-22d973efc7bb",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldSourceIds": [
+        "9e5f9898-410c-d485-4ecf-e4e1d0639e23",
+        "83a42c37-1894-f3a4-bebf-5f54e0c3ca86",
+        "19459e86-a86e-9bd3-fa16-b1f14fdf226f",
+        "2d44ee82-16fe-bba6-c1de-17a97aa42d00"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 1
+    },
+    {
+      "caseId": "nl-012",
+      "question": "想带老人去一个不用爬山的5A景区，最好有佛教文化、节奏慢一点，浙江哪里比较合适",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "ef2d83a2-7581-2029-f9ae-d0b6db660be9",
+        "38c2a37f-10ae-46a1-04e1-68914a9eaea0",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "9c859a08-3c69-0ca6-6ffc-40df29bde751"
+      ],
+      "goldSourceIds": [
+        "b7ad2b7c-4330-7bcd-eed9-278557bd7f13",
+        "d9d420c1-450e-258d-762a-73e31d0ed71a",
+        "0bdf59f1-f30a-f88a-cc77-d7e0bad5a575"
+      ],
+      "goldResolved": true,
+      "hit": false,
+      "reciprocalRank": 0
+    },
+    {
+      "caseId": "nl-013",
+      "question": "听说浙江有个地方梯田特别美，很多摄影爱好者都去，想问下什么时候去最好、要不要在山上住一晚",
+      "dimension": "长自然语言",
+      "backend": "elasticsearch",
+      "retrievedSourceIds": [
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b",
+        "5585376e-96fe-10f0-4973-4ceadfbabbad",
+        "0c79f454-1b27-20dd-25e3-3ffc6f55b36d",
+        "a03de687-ad84-8e52-0bff-e0beacd1552f",
+        "53296fe3-a03d-e45d-2ff3-a8777030f51b"
+      ],
+      "goldSourceIds": [
+        "afe7642e-95c2-4140-0624-7717a9478891",
+        "641b3abf-8338-a414-ead5-84e7a54026a3",
+        "2936c4b7-3c3f-caf8-dbdc-da6b48137e0b"
+      ],
+      "goldResolved": true,
+      "hit": true,
+      "reciprocalRank": 0.3333333333333333
+    }
+  ]
+}

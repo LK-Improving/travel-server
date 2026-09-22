@@ -234,3 +234,49 @@ ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400
 ### 10.4 新增产物
 - `scripts/evaluateHybridRecall.ts` + `package.json` 的 `eval:hybrid` 入口（复刻 `evaluateKeywordRecall.ts` 的金标准与指标，改走 `ragService.retrieve`）。
 - `eval/results-hybrid.json`（66 例逐条 retrieved/gold/hit/rr）。
+
+---
+
+## 11. A/B 灰度推进（2026-09-22）：ab 分流 + pg_trgm_fallback 零风险
+
+### 11.1 灰度机制（已落地于代码，非新需求）
+- **开关**：`RAG_SPARSE_BACKEND=ab` + `RAG_AB_ES_PERCENT`（默认 50，灰度首批建议 10）控制分流。路由逻辑（`lib/infra/elasticsearch.ts` `KeywordSearchRouter.chooseBackend`）：`sha256(query) % 100 < percent` 的查询进 ES 臂，其余进 pg_trgm 臂。**确定性、按 query 稳定**（同一 query 跨重启/跨请求落同一臂，不会会话中途翻转）。
+- **生产真正生效**：生产入口 `retrieveProject`（`platform_agent_runner.ts` / `project_chat.ts`）默认不传 `sparseVariant`，故 `ab` 路由器决定后端；管理端 `retrieve`（retrieval-debug）亦支持显式传 `ab`。
+- **自动回落**：ES 臂在「`ELASTICSEARCH_URL` 未配置 / 调用抛错」时自动回落 `pg_trgm_fallback`（同一处 `KeywordSearchRouter.search`），不会中断检索。
+- **可观测性（本次新增）**：`KeywordSearchRouter` 累积 `elasticsearch / pg_trgm / pg_trgm_fallback` 三臂计数；`ragService.status()` 暴露 `sparseArmStats`。灰度期间可实时监控分流比例与回落次数，也可在评测/压测前 `resetSparseArmStats()` 清理。
+
+### 11.2 灰度阶梯（先 10% ES → 全量）
+| 阶段 | RAG_AB_ES_PERCENT | 观察窗口 | 晋升条件（任一不满足则回退） |
+| --- | --- | --- | --- |
+| 1 | 10 | 1–3 天 | ES 臂错误率≈0、回落次数≈0、p95 延迟可接受、抽样召回无退化 |
+| 2 | 25 | 1–3 天 | 同上 |
+| 3 | 50 | 2–3 天 | 同上 |
+| 4 | 75 | 2–3 天 | 同上 |
+| 5 | 100（改 `RAG_SPARSE_BACKEND=elasticsearch`，弃用 ab） | — | 全量，ab 退出 |
+
+**回滚**：任一层级观测异常 → 调低 `RAG_AB_ES_PERCENT` 或直接 `RAG_SPARSE_BACKEND=pg_trgm` 全量回退（pg_trgm 已由 §10 证明是稳定地板）。
+
+### 11.3 实测验证（`eval/results-ab.json`，66 例 v5 集，KB `26929070-a2a2-…`，`npm run eval:ab`）
+两遍跑：Pass A（ES 正常）、Pass B（`ELASTICSEARCH_URL` 置空模拟 ES 宕机）。强制 hybrid（dense + sparse + RRF + rerank），仅把稀疏后端交给 `ab` 路由器决定。
+
+| 项 | Pass A（ES 正常） | Pass B（ES 宕机） |
+| --- | --- | --- |
+| 分流（ES / pg_trgm / fallback） | 4 / 62 / 0 | 0 / 62 / 4 |
+| pg_trgm 臂 Recall@5 / MRR | 1.000 / 0.938 | 1.000 / 0.938 |
+| ES 臂（或 fallback 臂）Recall@5 / MRR | 1.000 / 0.875 | 1.000 / 0.875 |
+| **整体** Recall@5 / MRR | **1.000 / 0.934** | **1.000 / 0.934** |
+
+> ES 臂 n=4（typo-010 / multi-002 / multi-003 / nl-005），MRR 0.875 属小样本噪声，不应过度解读；pg_trgm 臂 n=62 为主力。
+
+**回落证明**：Pass B 的 `pg_trgm_fallback` 计数 = Pass A 的 `elasticsearch` 计数 = **4**（`match=true`），且 Pass B 整体召回/MRR 与 Pass A 完全相等（`passB_overallEqualsFloor=true`）→ ES 失败时原 ES 臂无缝回落，召回零退化。
+
+### 11.4 关键结论（修正 §7.1 / §7.5 的预期）
+1. **稀疏后端不再 gate 召回**。hybrid 管线中 dense + rerank 始终开启，故无论查询落到 ES 还是 pg_trgm 稀疏臂，top-5 召回均为 **1.000**（§10 已验证 dense+rerank 打破稀疏天花板）。§9.2 的"pg_trgm 0.833 / 长NL 0.462"是 **sparse-only**（无 dense，`evaluateKeywordRecall.ts`）基线，与本灰度（hybrid）不可直接对比。
+2. 因此 §7.5 的"A/B 灰度"本质是**稀疏后端的成本 / 延迟 / 可用性选择**，而非召回风险决策——"零风险"比预期更强：灰度期即使 ES 全瘫，系统退化为"pg_trgm 稀疏 + dense + rerank"，召回仍 1.000。
+3. **灰度真正要盯的是 ES 的可用性 / 延迟 / 成本**，不是召回。阶梯把 `RAG_AB_ES_PERCENT` 10→100 逐步放量即可；`sparseArmStats` 提供实时分流与回落计数。
+
+### 11.5 新增产物
+- `lib/infra/elasticsearch.ts`：`KeywordSearchRouter` 三臂计数 + `getArmStats` / `resetArmStats`。
+- `lib/services/rag.ts`：`ragService.status()` 暴露 `sparseArmStats`，新增 `sparseArmStats` getter 与 `resetSparseArmStats()`。
+- `scripts/verifyAbGrayscale.ts` + `package.json` 的 `eval:ab`。
+- `eval/results-ab.json`（两遍：分发比例 / 每臂 Recall@5·MRR / 回落证明；调试明细 `eval/_ab_debug.json` 已被 `.gitignore` 忽略）。

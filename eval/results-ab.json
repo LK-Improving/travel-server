@@ -1,0 +1,73 @@
+{
+  "variant": "ab(percent=10)",
+  "topK": 5,
+  "datasetVersion": "city-kb-kw-recall-v5",
+  "knowledgeBaseId": "26929070-a2a2-43ec-818a-ff1f6d53a996",
+  "passA": {
+    "label": "A:ES正常",
+    "esDown": false,
+    "distribution": {
+      "total": 66,
+      "elasticsearch": 4,
+      "pg_trgm": 62,
+      "pg_trgm_fallback": 0
+    },
+    "perArm": {
+      "pg_trgm": {
+        "total": 62,
+        "resolved": 62,
+        "recallAtK": 1,
+        "mrr": 0.9381720430107527
+      },
+      "elasticsearch": {
+        "total": 4,
+        "resolved": 4,
+        "recallAtK": 1,
+        "mrr": 0.875
+      }
+    },
+    "overall": {
+      "total": 66,
+      "resolved": 66,
+      "recallAtK": 1,
+      "mrr": 0.9343434343434344
+    }
+  },
+  "passB": {
+    "label": "B:ES宕机",
+    "esDown": true,
+    "distribution": {
+      "total": 66,
+      "elasticsearch": 0,
+      "pg_trgm": 62,
+      "pg_trgm_fallback": 4
+    },
+    "perArm": {
+      "pg_trgm": {
+        "total": 62,
+        "resolved": 62,
+        "recallAtK": 1,
+        "mrr": 0.9381720430107527
+      },
+      "pg_trgm_fallback": {
+        "total": 4,
+        "resolved": 4,
+        "recallAtK": 1,
+        "mrr": 0.875
+      }
+    },
+    "overall": {
+      "total": 66,
+      "resolved": 66,
+      "recallAtK": 1,
+      "mrr": 0.9343434343434344
+    }
+  },
+  "fallbackProof": {
+    "passA_elasticsearch": 4,
+    "passB_pg_trgm_fallback": 4,
+    "match": true,
+    "passB_overallEqualsFloor": true
+  },
+  "conclusion": "hybrid 管线（dense + sparse + RRF + rerank）中 dense+rerank 始终开启，故无论查询落到 ES 臂还是 pg_trgm 臂，top-5 召回均为 1.000（MRR≈0.93）；本次 10% 分流把 4/66 个查询确定性地分到 ES 臂。ES 宕机时这些查询全部回落 pg_trgm_fallback，整体召回与 MRR 与 ES 正常时完全一致（1.000/0.934）——验证\"A/B 灰度零召回风险\"成立。灰度期稀疏后端的选择只影响成本/延迟/可用性，不影响 top-5 召回。"
+}

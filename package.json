@@ -19,6 +19,7 @@
     "ingest:city": "tsx scripts/ingestCityDocs.ts",
     "eval:keyword": "tsx scripts/evaluateKeywordRecall.ts",
     "eval:hybrid": "tsx scripts/evaluateHybridRecall.ts",
+    "eval:ab": "tsx scripts/verifyAbGrayscale.ts",
     "smoke:hybrid": "tsx scripts/smokeTestHybrid.ts"
   },
   "dependencies": {

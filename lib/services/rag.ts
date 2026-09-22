@@ -400,7 +400,21 @@ export class RagService {
   }
 
   async status(): Promise<Record<string, unknown>> {
-    return { success: true, ...(await milvusVectorStore.health()) };
+    return {
+      success: true,
+      ...(await milvusVectorStore.health()),
+      sparseArmStats: this.keywordRouter.getArmStats(),
+    };
+  }
+
+  /** A/B 灰度期间读取稀疏臂分发统计（实际生效臂，含 ES 失败回落）。 */
+  get sparseArmStats() {
+    return this.keywordRouter.getArmStats();
+  }
+
+  /** 重置 A/B 臂统计（评测/压测前后清理用）。 */
+  resetSparseArmStats(): void {
+    this.keywordRouter.resetArmStats();
   }
 }
 

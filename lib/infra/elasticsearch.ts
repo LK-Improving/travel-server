@@ -242,6 +242,14 @@ export const elasticsearchKeywordSearch = new ElasticsearchKeywordSearch();
 
 export type SparseBackend = 'pg_trgm' | 'elasticsearch' | 'pg_trgm_fallback';
 
+/** A/B 灰度期间的稀疏臂分发统计，按"实际生效臂"（含 ES 失败后的 pg_trgm_fallback）累计。 */
+export interface ArmStats {
+  total: number;
+  elasticsearch: number;
+  pg_trgm: number;
+  pg_trgm_fallback: number;
+}
+
 /**
  * 稀疏检索后端选择：pg_trgm、elasticsearch 或基于 query 哈希的确定性 A/B 分流。
  * ES 作为实验臂，失败时回落到 pg_trgm 并记录回落臂名。
@@ -256,7 +264,18 @@ export class KeywordSearchRouter {
       limit: number,
       minScore: number,
     ) => Promise<KeywordHit[]>,
+    private armStats: ArmStats = { total: 0, elasticsearch: 0, pg_trgm: 0, pg_trgm_fallback: 0 },
   ) {}
+
+  /** 当前 A/B 分流统计（按实际生效臂累计，含 ES 失败回落）。 */
+  getArmStats(): ArmStats {
+    return { ...this.armStats };
+  }
+
+  /** 重置统计（评测/压测前后清理，避免污染真实流量计数）。 */
+  resetArmStats(): void {
+    this.armStats = { total: 0, elasticsearch: 0, pg_trgm: 0, pg_trgm_fallback: 0 };
+  }
 
   chooseBackend(query: string, variant?: string | null): SparseBackend {
     const requested = (variant ?? config.ragSparseBackend ?? 'pg_trgm').trim().toLowerCase();
@@ -277,29 +296,48 @@ export class KeywordSearchRouter {
     },
   ): Promise<{ hits: KeywordHit[]; backend: SparseBackend }> {
     let backend = this.chooseBackend(query, options.variant);
+    let hits: KeywordHit[];
     if (backend === 'elasticsearch') {
       if (this.es.configured) {
         try {
-          const hits = await this.es.search(query, {
+          hits = await this.es.search(query, {
             regions: options.regions,
             knowledgeBaseId: options.knowledgeBaseId,
             limit: options.limit,
           });
-          return { hits, backend: 'elasticsearch' };
+          backend = 'elasticsearch';
         } catch {
           backend = 'pg_trgm_fallback';
+          hits = await this.trgmSearch(
+            query,
+            options.regions ?? null,
+            options.knowledgeBaseId ?? null,
+            options.limit,
+            options.minScore,
+          );
         }
       } else {
         backend = 'pg_trgm_fallback';
+        hits = await this.trgmSearch(
+          query,
+          options.regions ?? null,
+          options.knowledgeBaseId ?? null,
+          options.limit,
+          options.minScore,
+        );
       }
+    } else {
+      hits = await this.trgmSearch(
+        query,
+        options.regions ?? null,
+        options.knowledgeBaseId ?? null,
+        options.limit,
+        options.minScore,
+      );
     }
-    const hits = await this.trgmSearch(
-      query,
-      options.regions ?? null,
-      options.knowledgeBaseId ?? null,
-      options.limit,
-      options.minScore,
-    );
+    // 按"实际生效臂"累计：ES 臂在 configured 失败/未配置时记为 pg_trgm_fallback。
+    this.armStats.total += 1;
+    this.armStats[backend] += 1;
     return { hits, backend };
   }
 }

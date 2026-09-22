@@ -203,5 +203,34 @@ ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400
 
 ### 9.5 建议与最终决定
 - **切片尺寸：维持 `RAG_CHUNK_SIZE=500/100`（用户 2026-09-21 决定）**。本实验证明 500 对稀疏召回无 measurable 收益、且让兜底 pg 略退步、存储翻倍；但用户后续会继续补充文档，细切片对增量内容更友好，故保留 500。
-- 只有在「开启 dense + rerank 后、且 LLM 取 top-k 喂文时碎片噪声成为瓶颈」时，400–500 才可能显现收益——那部分本评测无法度量（Milvus 当前未启动），需用 dense 评测另行验证。
-- **chunk_id 表示归一化硬化已完成**（见 9.4），比调切片尺寸更值得做的这条已落地。
+  - 只有在「开启 dense + rerank 后、且 LLM 取 top-k 喂文时碎片噪声成为瓶颈」时，400–500 才可能显现收益——那部分本评测无法度量（Milvus 当前未启动），需用 dense 评测另行验证。
+  - **chunk_id 表示归一化硬化已完成**（见 9.4），比调切片尺寸更值得做的这条已落地。
+
+---
+
+## 10. 混合检索实测（2026-09-22）：dense + sparse(ES) + RRF + rerank
+
+### 10.1 背景
+§7.1 的假设：纯稀疏对长自然语言存在天花板（ES-only 长句 Recall@5=0.692），靠 dense 向量 + rerank 补。彼时 Milvus 未启动，无法度量。现 Milvus 已起、`reindex:milvus` 已灌、混合管线已实现并冒烟通过，遂在 **同口径 66 例 v5 集**（`pg_trgm_keyword_recall_dataset_v5.json`，KB `26929070-…`）上实跑 `npm run eval:hybrid`（`scripts/evaluateHybridRecall.ts`，强制 `ragHybridEnabled=true` + `ragRerankEnabled=true` + `sparseVariant=elasticsearch`，金标准与 sparse 评测完全一致：按 goldKeywords 反查 PG published 切片 + 去连字符归一化）。
+
+### 10.2 结果（Recall@5 / MRR，与 §9.2 同口径）
+
+| 维度 | 例数 | ES-only(§9.2) | pg_trgm(§9.2) | **hybrid(本次)** |
+| --- | --- | --- | --- | --- |
+| 召回准确率 | 15 | 1.000 / 1.000 | 1.000 | 1.000 / 1.000 |
+| 错别字纠正 | 12 | 0.917 / 0.917 | 0.833 | 1.000 / 0.958 |
+| 指代词问答 | 13 | 1.000 / 0.949 | 1.000 | 1.000 / 0.962 |
+| 多约束组合 | 13 | 1.000 / 0.910 | 0.846 | 1.000 / 0.885 |
+| 长自然语言 | 13 | 0.692 / 0.590 | 0.462 | **1.000 / 0.962** |
+| **总体** | 66 | **0.924 / 0.843** | 0.833 | **1.000 / 0.955** |
+
+> 数据来源：`eval/results-hybrid.json` vs `results-v5-elasticsearch.json` / `results-v5-pg_trgm.json`。hybrid 的稀疏臂走的是 ES（IK），与 ES-only 基线同后端，差异仅来自叠加的 dense 臂 + RRF + rerank。
+
+### 10.3 结论
+1. **§7.1 假设成立**：dense + rerank 把长自然语言 Recall@5 从 **0.692 拉到 1.000**、MRR 从 0.590 拉到 0.962——稀疏天花板被打破，且不是换稀疏后端能解决的方向（§7.2 的查询改写仍可锦上添花，但已非必需）。
+2. **整体 Recall@5 从 0.924 提到 1.000**，错别字 / 多约束等维度也轻微上扬；MRR 0.955，相关片基本排在 top-1~2。
+3. **风险面已收敛**：§7.1 担心的「long-NL 是最大短板」在 hybrid 下消失，可以放心推进 §7.5 的 A/B 灰度（先 10% ES/混合 → 全量），ES 失败仍自动回落 `pg_trgm_fallback`。
+
+### 10.4 新增产物
+- `scripts/evaluateHybridRecall.ts` + `package.json` 的 `eval:hybrid` 入口（复刻 `evaluateKeywordRecall.ts` 的金标准与指标，改走 `ragService.retrieve`）。
+- `eval/results-hybrid.json`（66 例逐条 retrieved/gold/hit/rr）。

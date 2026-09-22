@@ -18,6 +18,7 @@
     "reindex:milvus": "tsx scripts/reindexPublishedMilvus.ts",
     "ingest:city": "tsx scripts/ingestCityDocs.ts",
     "eval:keyword": "tsx scripts/evaluateKeywordRecall.ts",
+    "eval:hybrid": "tsx scripts/evaluateHybridRecall.ts",
     "smoke:hybrid": "tsx scripts/smokeTestHybrid.ts"
   },
   "dependencies": {

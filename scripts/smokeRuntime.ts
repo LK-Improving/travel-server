@@ -256,8 +256,17 @@ async function main(): Promise<void> {
   const me = await call({ name: 'auth.me', method: 'GET', path: '/api/auth/me', token });
   const meData = asObject(me.data);
   const meRole = typeof meData?.['role'] === 'string' ? String(meData['role']) : '';
-  if (me && meRole !== 'admin') {
-    me.note = `当前用户角色=${meRole || '未知'}（期望 admin，ensureAdmin 可能未生效）`;
+  if (meRole !== 'admin') {
+    // 注：call() 的返回值不含 note，报告行在 results 数组里（与上方 probeResult 同理）。
+    // 反向找到最近的 auth.me 步骤结果再写 note，避免误改同名探针步骤。
+    let meStep: StepResult | undefined;
+    for (let i = results.length - 1; i >= 0; i--) {
+      if (results[i].name === 'auth.me') {
+        meStep = results[i];
+        break;
+      }
+    }
+    if (meStep) meStep.note = `当前用户角色=${meRole || '未知'}（期望 admin，ensureAdmin 可能未生效）`;
   }
 
   // 5) 知识库列表

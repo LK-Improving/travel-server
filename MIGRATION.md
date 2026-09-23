@@ -88,3 +88,15 @@
   - 生产环境需与 `npm run worker` 一同常驻 `npm run audit:outbox`。
   - 说明：原「发布/下架文档」「偏好更新」在 `app/api/admin/*` 下无对应写端点（文档 `status` 仅为列表过滤条件，偏好表无 admin 路由），故未接入；如后续新增相关端点应一并补 `recordAdminAudit`。
 - 验证：`npm run typecheck` 0 错误。
+
+### #7 chunk_id 归一化重灌（2026-09-21 完成代码修正，需在有基础设施的环境执行）
+
+- **根因**：`buildChunkId`（`lib/services/document_processing.ts:43`）现已输出带连字符的 `8-4-4-4-12` UUID 形式，但历史切片在 Milvus/ES 中以「32 位无连字符 hex」主键写入。PG `travel_document_chunks.chunk_id` 是 `UUID` 列（`migrations/20260724_...sql:113`），Postgres 始终返回带连字符形式，故不一致只存在于 **ES/Milvus 两端**，PG 始终是权威源且已 hyphenated。跨存储按 `chunk_id` 比对时 32-hex 与 hyphenated 永不相等，曾导致评测里 ES 命中率被误判为 0（见 `eval/es-vs-pg_trgm-comparison.md` §9.4）。
+- **ES 重灌已安全**：`scripts/reindexElasticsearch.ts` 循环前 `deleteIndex()` 整体删索引再重建，旧 32-hex 文档被整体清除，`chunkId` 取自 PG（hyphenated），无残留。
+- **Milvus 重灌原不安全（已修复）**：`scripts/reindexPublishedMilvus.ts` 原本只 `upsertChunks`（按 `chunk_id` 主键 upsert，不 drop）。旧 32-hex 与新 hyphenated 是**不同主键**，upsert 无法覆盖旧主键，旧向量会作为**孤儿向量**残留（`published=true`，仍被 `search` 命中，却对应 PG/ES 中不存在的 `chunk_id`），重灌后反而继续制造不一致。
+  - 修复：新增 `lib/infra/milvus.ts` 的 `dropCollection()`，并在 `reindexPublishedMilvus.ts` 重建前先整体 `dropCollection()` 再 `ensureCollection()`，与 ES 端 `deleteIndex()` 对齐，成为真正的全量重建。PG 是唯一权威源，drop 后从 PG 重读即可完整恢复，无数据丢失。建议在低流量期执行（重建窗口内 Milvus 短暂为空，检索召回临时下降）。
+- **执行（需 DB / Milvus / ES / embedding 模型 `BAAI/bge-m3` 齐备）**：
+  - `npm run reindex:es` —— 全量、安全（自动 deleteIndex + 重建）。
+  - `npm run reindex:milvus` —— 默认仅 published；`MILVUS_REINDEX_ONLY_PUBLISHED=false` 连未发布切片一并回灌（更彻底，确保 Milvus 中零 32-hex）。
+  - 验证：Milvus 查询 `chunk_id not like "%-%"` 应为 0 行；ES `_search` 抽样 `chunk_id` 均为 hyphenated。
+- 验证：`npm run typecheck` 0 错误（本次同时修复 `scripts/smokeRuntime.ts` 一个遗留类型错误：`auth.me` 步骤误将 `note` 写在 `call()` 返回值上而非 `results` 数组的 `StepResult` 上，导致 `tsc` 报 `Property 'note' does not exist`）。

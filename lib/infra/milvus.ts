@@ -319,6 +319,26 @@ export class MilvusRepository {
     await client.flush({ collection_names: [this.collectionName] });
   }
 
+  /**
+   * 全量重建前清空整个 collection。
+   *
+   * 关键：Milvus 以 chunk_id 为主键（VarChar(64)）。历史切片曾用「32 位无连字符 hex」
+   * 作为 chunk_id 写入，而修复后的 buildChunkId 输出「8-4-4-4-12 带连字符」形式——
+   * 两者是同一 128 位值的不同字符串表示，但作为主键是**不同字符串**，因此 upsert
+   * 只能覆盖同主键、无法清理旧主键。若只 upsert 不 drop，旧 32-hex 向量会作为孤儿残留：
+   * 它们 published=true，仍会被 search 命中，却对应 PG/ES 中不存在的 chunk_id，重新制造
+   * #7 要消除的跨存储比对不一致。故 reindex 必须整体 drop 再重建，与 ES 端 deleteIndex() 对齐。
+   */
+  async dropCollection(): Promise<void> {
+    const client = this.getClient();
+    const has = await client.hasCollection({ collection_name: this.collectionName });
+    if (has.value) {
+      await client.dropCollection({ collection_name: this.collectionName });
+    }
+    this.ensured = false;
+    this.ensuring = null;
+  }
+
   async setDocumentPublished(documentId: string, published: boolean): Promise<void> {
     await this.ensureCollection({ force: true });
     const client = this.getClient();

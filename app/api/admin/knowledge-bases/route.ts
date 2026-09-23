@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { route, parseJson, parseQuery, readInt, successResponse } from '@/lib/http';
 import { adminReader, adminWriter } from '@/lib/auth/subject';
 import { listKnowledgeBases, createKnowledgeBase } from '@/lib/repositories/knowledge';
+import { recordAdminAudit } from '@/lib/audit';
 
 export const runtime = 'nodejs';
 
@@ -22,5 +23,12 @@ export const POST = route(async (request) => {
   const user = await adminWriter(request);
   const body = await parseJson(request, CreateSchema);
   const kb = await createKnowledgeBase({ name: body.name, description: body.description, status: body.status }, user.id);
+  await recordAdminAudit({
+    actorId: user.id,
+    action: 'kb.create',
+    targetType: 'knowledge_base',
+    targetId: String(kb.id),
+    details: { name: body.name, status: body.status },
+  });
   return successResponse(kb, 201);
 });

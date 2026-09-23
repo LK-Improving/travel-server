@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { route, parseJson, successResponse, notFound } from '@/lib/http';
 import { adminReader, adminWriter } from '@/lib/auth/subject';
 import { getKnowledgeBase, updateKnowledgeBase, deleteKnowledgeBase } from '@/lib/repositories/knowledge';
+import { recordAdminAudit } from '@/lib/audit';
 
 export const runtime = 'nodejs';
 
@@ -27,8 +28,14 @@ export const PUT = route(async (request, params) => {
 });
 
 export const DELETE = route(async (request, params) => {
-  await adminWriter(request);
+  const user = await adminWriter(request);
   const ok = await deleteKnowledgeBase(params.id);
   if (!ok) throw notFound('知识库不存在');
+  await recordAdminAudit({
+    actorId: user.id,
+    action: 'kb.delete',
+    targetType: 'knowledge_base',
+    targetId: params.id,
+  });
   return successResponse({ id: params.id, deleted: true });
 });

@@ -67,7 +67,7 @@
 2. **重复注册返回 500**：`createUser` 抛普通 Error，冒泡成 500；已在 `app/api/auth/register/route.ts` 捕获并转为 `conflict`，语义正确为 409。
 3. 环境侧：对象存储未配置时降级为**进程内内存实现**，worker 是独立进程读不到上传原文，摄取必然失败；本地联调需在 `.env` 启用 `OBJECT_STORAGE_*`（指向 MinIO）才能让两进程共享原文。
 
-**遗留（未修，需确认后处理）**：`lib/repositories/adminRepo.ts` 的 `audit()` 目前**无任何调用方**，运营台的建库/上传/发布等写操作不落审计日志（审计列表接口正常但恒为 0 条）；仅工具调用经 `enqueueAuditOutbox` 记录。是否给管理端写操作接上审计待定。
+**遗留（已在 2026-09-24~25 处理，见文末「#3-A / #3-B」节）**：注册 role 锁死与运营台审计闭环均已落地。
 
 ### #5 / #6 小改（2026-09-24 完成，未独立提交）
 
@@ -75,3 +75,16 @@
 - **#6 放宽城市级 `regions` 过滤**：新增迁移 `migrations/20260921_relax_regions_check.sql`，删除 `travel_documents` / `travel_document_chunks` / `travel_user_preferences` / `travel_suggested_questions` 四表的 `*_region_values_check` 取值白名单（杭州 13 区县），保留 `cardinality(regions) <= 3` 数量上限与 `NOT NULL`；应用层无取值校验，放松后 `regions` 可存任意地市/区县名，城市级过滤立即可用。`scripts/ingestCityDocs.ts` 同步把 `meta.city` 写入 `regions`。迁移已在本地 `travel` 库执行并确认约束已移除。详见 `eval/es-vs-pg_trgm-comparison.md` §14。
 
 > 注意：#5/#6 改完 `npm run typecheck` 0 错误；本次改动较小、相互正交，与既有提交一起评审/合入即可，未单独成提交。
+
+### #3-A / #3-B 安全加固与审计闭环（2026-09-25 完成）
+
+- **#3-A 注册 role 锁死（安全修复）**：`app/api/auth/register/route.ts` 的 `RegisterSchema` 已删除 `role` 字段，调用 `createUser` 不再传 `role`（其默认即 `user`），与 `lib/auth/subject.ts`「角色一律由服务端解析，绝不采信客户端提交的 role」对齐——公开注册接口不再可被用来提权为 `admin`/`operator`/`viewer`。
+  - 管理员预置改走受信任服务端通道：`scripts/seedAdmin.ts` 的 `ensureAdmin(account, password)`（直接调 `createUser({ role:'admin' })`，幂等），新增 npm 脚本 `npm run db:seed-admin`（默认用 `SMOKE_ADMIN_*` 凭据；可用 `SEED_ADMIN_*` 覆盖）。
+  - 冒烟脚本 `scripts/smokeRuntime.ts` 同步改造：启动时经 `ensureAdmin` 预置管理员（不再依赖公开接口注册 admin），并新增「无 role 探测账号」回归验证（`auth.me` 角色应为 `user`，否则判异常）。
+- **#3-B 运营台审计闭环**：
+  - 新增 `lib/audit.ts` 的 `recordAdminAudit()`——best-effort 把审计事件写入 `travel_audit_outbox`（不阻塞主操作）。
+  - 运营台写操作已接入：知识库创建/删除、文档上传/删除、推荐问题增删改（`app/api/admin/knowledge-bases`、`app/api/admin/documents`、`app/api/admin/suggested-questions` 对应 `route.ts`）。每处 `actorId` 取自 `adminWriter(request).id`，`action` 形如 `kb.create`/`document.upload`/`suggested_question.delete` 等。
+  - 新增 `scripts/auditOutboxWorker.ts`（`npm run audit:outbox`）：周期性 `claimAuditOutbox` 批量领取，按 `event_method` 分发——`'audit'`→`audit()`、`'record_tool_call'`→`recordToolCall()`，成功 `completeAuditOutbox`、失败 `failAuditOutbox`（按 `max_attempts` 退避重试，超限进 `dead_letter`；`processing` 行 5 分钟超时自动回收）。**此举同时让 `projects.ts` 既有 6 处项目写审计与 `tool_policy` 工具调用审计真正落库**（此前 `claimAuditOutbox` 无调用方，outbox 从未被排空）。
+  - 生产环境需与 `npm run worker` 一同常驻 `npm run audit:outbox`。
+  - 说明：原「发布/下架文档」「偏好更新」在 `app/api/admin/*` 下无对应写端点（文档 `status` 仅为列表过滤条件，偏好表无 admin 路由），故未接入；如后续新增相关端点应一并补 `recordAdminAudit`。
+- 验证：`npm run typecheck` 0 错误。

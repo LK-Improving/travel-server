@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { route, parseJson, parseQuery, readInt, successResponse } from '@/lib/http';
 import { adminReader, adminWriter } from '@/lib/auth/subject';
 import { adminService } from '@/lib/services/admin';
+import { recordAdminAudit } from '@/lib/audit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -28,5 +29,13 @@ export const GET = route(async (request) => {
 export const POST = route(async (request) => {
   const user = await adminWriter(request);
   const body = await parseJson(request, Payload);
-  return successResponse(await adminService.createSuggestedQuestion(body, user.id), 201);
+  const created = await adminService.createSuggestedQuestion(body, user.id);
+  await recordAdminAudit({
+    actorId: user.id,
+    action: 'suggested_question.create',
+    targetType: 'suggested_question',
+    targetId: String(created.id),
+    details: { content: body.content },
+  });
+  return successResponse(created, 201);
 });

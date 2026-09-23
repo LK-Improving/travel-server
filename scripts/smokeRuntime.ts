@@ -8,10 +8,12 @@
  *   SMOKE_BASE_URL=http://127.0.0.1:8000 SMOKE_RETRIEVAL_KB_ID=<有数据的知识库> npm run smoke:runtime
  * 输出：eval/runtime-smoke.json
  *
- * 注意：本脚本只用 fetch 打真实 HTTP，不连数据库；沙箱出网代理不影响 127.0.0.1（undici 不读 HTTP_PROXY）。
+ * 注意：本脚本主要用 fetch 打真实 HTTP；仅在启动时经 scripts/seedAdmin.ts 受信任通道
+ * 预置管理员（确保运营台步骤可用），因此会连一次数据库。沙箱出网代理不影响 127.0.0.1（undici 不读 HTTP_PROXY）。
  */
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { ensureAdmin } from './seedAdmin';
 
 const BASE = (process.env.SMOKE_BASE_URL ?? 'http://127.0.0.1:8000').replace(/\/+$/, '');
 const ACCOUNT = process.env.SMOKE_ADMIN_ACCOUNT ?? 'smoke_admin';
@@ -195,17 +197,46 @@ async function main(): Promise<void> {
   // 1) 心跳（无需鉴权）
   await call({ name: 'heartbeat', method: 'GET', path: '/api/heartbeat' });
 
-  // 2) 注册运营账号（重复运行时账号已存在；重复注册当前返回 500 而非 409，属非关键步骤）
-  const registered = await call({
-    name: 'auth.register',
+  // 2) 受信任预置管理员：公开注册接口已不再接受客户端 role（#3-A），
+  //    管理员只能经 seedAdmin 的服务端通道创建。smoke 直接调用 ensureAdmin 保证管理员就绪。
+  try {
+    const seeded = await ensureAdmin(ACCOUNT, PASSWORD);
+    console.log(`[smoke] ensureAdmin(${ACCOUNT}) -> ${seeded}`);
+  } catch (error) {
+    console.log(`[smoke] ensureAdmin 失败（将影响后续需鉴权步骤）：${String((error as Error)?.message ?? error)}`);
+  }
+
+  // 2b) 回归验证 #3-A：公开注册忽略客户端 role——注册一个无 role 的探测账号，其角色应为 user（非 admin）
+  const probeAccount = `smoke_probe_${Date.now()}`;
+  await call({
+    name: 'auth.register(no-role)',
     method: 'POST',
     path: '/api/auth/register',
-    body: { account: ACCOUNT, password: PASSWORD, role: 'admin' },
-    expect: [200, 201, 409],
+    body: { account: probeAccount, password: PASSWORD },
+    expect: [200, 201],
     optional: true,
   });
-  if (registered.status === 409) {
-    results[results.length - 1]!.note = '账号已存在（409 冲突，符合预期），继续用既有账号登录';
+  const probeLogin = await call({
+    name: 'auth.login(probe)',
+    method: 'POST',
+    path: '/api/auth/login',
+    body: { account: probeAccount, password: PASSWORD },
+    optional: true,
+  });
+  const probeData = asObject(probeLogin.data);
+  const probeToken = typeof probeData?.['token'] === 'string' ? String(probeData['token']) : '';
+  let probeRole = '';
+  if (probeToken) {
+    const probeMe = await call({ name: 'auth.me(probe)', method: 'GET', path: '/api/auth/me', token: probeToken, optional: true });
+    const probeMeData = asObject(probeMe.data);
+    probeRole = typeof probeMeData?.['role'] === 'string' ? String(probeMeData['role']) : '';
+  }
+  const probeResult = results[results.length - 1];
+  if (probeResult) {
+    probeResult.note =
+      probeRole === 'user'
+        ? '公开注册忽略 role，角色=user（#3-A 验证通过）'
+        : `探测账号角色=${probeRole || '未知'}（异常：应=user）`;
   }
 
   // 3) 登录取 JWT
@@ -221,9 +252,13 @@ async function main(): Promise<void> {
     console.log('[smoke] 登录未取得 token，后续需鉴权步骤会失败');
   }
 
-  // 4) 当前用户
+  // 4) 当前用户（断言为管理员，验证 ensureAdmin 预置生效）
   const me = await call({ name: 'auth.me', method: 'GET', path: '/api/auth/me', token });
   const meData = asObject(me.data);
+  const meRole = typeof meData?.['role'] === 'string' ? String(meData['role']) : '';
+  if (me && meRole !== 'admin') {
+    me.note = `当前用户角色=${meRole || '未知'}（期望 admin，ensureAdmin 可能未生效）`;
+  }
 
   // 5) 知识库列表
   const kbList = await call({ name: 'kb.list', method: 'GET', path: '/api/admin/knowledge-bases', token });

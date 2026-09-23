@@ -14,6 +14,8 @@
     "worker": "tsx worker/index.ts",
     "db:init": "tsx scripts/initDb.ts",
     "db:init-agent-runtime": "tsx scripts/initAgentRuntime.ts",
+    "db:seed-admin": "tsx scripts/seedAdmin.ts",
+    "audit:outbox": "tsx scripts/auditOutboxWorker.ts",
     "reindex:es": "tsx scripts/reindexElasticsearch.ts",
     "reindex:milvus": "tsx scripts/reindexPublishedMilvus.ts",
     "ingest:city": "tsx scripts/ingestCityDocs.ts",

@@ -3,6 +3,7 @@ import { route, parseJson, parseQuery, readInt, successResponse } from '@/lib/ht
 import { adminReader, adminWriter } from '@/lib/auth/subject';
 import { listAdminDocuments } from '@/lib/repositories/knowledge';
 import { documentIngestionService } from '@/lib/services/document_ingestion';
+import { recordAdminAudit } from '@/lib/audit';
 
 export const runtime = 'nodejs';
 
@@ -32,5 +33,12 @@ export const POST = route(async (request) => {
   const user = await adminWriter(request);
   const body = await parseJson(request, UploadSchema);
   const doc = await documentIngestionService.upload({ ...body, actorId: user.id });
+  await recordAdminAudit({
+    actorId: user.id,
+    action: 'document.upload',
+    targetType: 'document',
+    targetId: String(doc.id),
+    details: { knowledgeBaseId: body.knowledgeBaseId, fileName: body.fileName, title: body.title },
+  });
   return successResponse(doc, 201);
 });

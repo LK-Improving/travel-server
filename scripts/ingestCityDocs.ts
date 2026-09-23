@@ -136,9 +136,9 @@ async function main(): Promise<void> {
       contentType: 'text/markdown',
       objectKey,
       contentHash,
-      // regions 有 CHECK 约束，当前仅允许杭州 13 个区县（上城/西湖/…），地市名写入会报错；
-      // 因此地市维度信息统一放进 tags（tags 无取值约束，且 ES 中 tags 权重最高 tags^4）。
-      regions: [],
+      // regions 的 CHECK 取值白名单已于迁移 20260921 放开（不再限定杭州 13 区县，可存地市名），
+      // 因此这里可直接把地市名写入 regions 以启用城市级过滤；tags 仍保留便于权重叠加。
+      regions: [meta.city],
       tags: ['地市', '浙江省', meta.city, '旅游', '美食', '行程'],
       actorId: ACTOR,
     });
@@ -154,7 +154,7 @@ async function main(): Promise<void> {
     }
 
     const tags = ['地市', '浙江省', meta.city, '旅游', '美食', '行程'];
-    const regions: string[] = [];
+    const regions: string[] = [meta.city];
     let embeddingModel = '';
 
     if (milvusUp) {

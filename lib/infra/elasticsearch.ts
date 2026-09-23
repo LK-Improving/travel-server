@@ -167,10 +167,10 @@ export class ElasticsearchKeywordSearch {
             },
           ],
           // 第二路与错字鲁棒性对齐 pg_trgm：ES 不允许在 cross_fields 上启用 fuzziness，
-          // 故用独立的 best_fields should 子句携带 fuzziness:'AUTO'。minimum_should_match 默认 0，
-          // 该子句为纯加分项——正常查询不受影响，错字查询（如 3 字 token 摇橹般→摇橹船）可被模糊召回。
-          // 注：AUTO 对长度<=2 的 token 给 0 编辑距离，因此 2 字错字（西胡→西湖）仍需 pg_trgm 三元组兜底；
-          // 若要覆盖 2 字错字需显式 fuzziness:1。
+          // 故用独立的 best_fields should 子句携带 fuzziness（由 RAG_ES_FUZZINESS 控制，默认 1）。
+          // minimum_should_match 默认 0，该子句为纯加分项——正常查询不受影响，错字查询可被模糊召回。
+          // 显式 fuzziness:1 对长度 <=2 的 token 也允许 1 编辑距离，从而覆盖 2 字错字（南寻→南浔、西胡→西湖），
+          // 不再只能靠 pg_trgm 三元组 + pg_trgm_fallback 兜底。
           should: [
             {
               multi_match: {
@@ -181,7 +181,7 @@ export class ElasticsearchKeywordSearch {
                 tie_breaker: 0.3,
                 analyzer: config.elasticsearchSearchAnalyzer,
                 auto_generate_synonyms_phrase_query: false,
-                fuzziness: 'AUTO',
+                fuzziness: config.ragEsFuzziness,
                 fuzzy_transpositions: true,
               },
             },

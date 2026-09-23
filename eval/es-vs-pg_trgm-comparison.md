@@ -36,6 +36,7 @@
 ### 2.2 错别字纠正 — ES 0.917 vs pg_trgm 0.833（ES 胜）
 12 例单字形近/音近错字。pg 漏 2 例：`typo-004`（江朗→江郎）、`typo-005`（南寻→南浔）；ES 只漏 `typo-005`。
 `typo-005` 是两者**共漏**：「南寻古镇」与「南浔」首字不同且「寻/浔」为 1 字替换，ES 的 `fuzziness:'AUTO'` 对 3~5 字 token 给 1 编辑距离本应覆盖，但该查询同时带「在哪里」这类虚词稀释了 BM25 排序，未进 Top-5。
+> **2026-09-24 更新（§13）**：`fuzziness` 已由 `'AUTO'` 改为显式 `1`（`RAG_ES_FUZZINESS`）。token 级验证表明，IK 将「南寻」切成 `[南,寻]` 单字后，`AUTO` 对 1 字 token 给 0 编辑距离，无法把 `寻` 模糊成 `浔`；`fuzziness:1` 则可，使 2 字错字（南寻→南浔、西胡→西湖）被 ES 独立召回，不再只靠 `pg_trgm_fallback`。在 v5 同口径下 `typo-005` 应被 ES 补回（错别字维度 ES 趋近 1.000），但当前 66 例评测脚本因 KB 已按 v6 重切（103 切片）且数据集/金标准漂移需重新校准，故未重跑全量，仅做了 token 级对照验证。
 
 ### 2.3 指代词问答 — ES 1.000 / MRR 0.949 vs pg 1.000 / 0.910（ES 排序更优）
 13 例均命中，但 **ES 的 MRR 更高**，说明 ES 把正确切片排得更靠前（第 1 位命中更多）。这类查询用描述性短语指代实体（「那个被称为世界第九大奇迹的石窟」「那座中国现存最早的私家藏书楼」），ES 的 `cross_fields` 多字段加权能把描述性残词与正文对齐得更好。
@@ -82,9 +83,9 @@ pg 漏 2 例：`multi-002`（带娃 + 沙滩 + 玩水 → 朱家尖）、`multi-
 - 入库脚本改为**先把 PG 置 published、再按 `published: true` 直接写入 ES**，不再依赖「写 false 再改 true」的两步。
 **教训**：ES 写入与后续按条件更新之间必须显式 refresh，否则「静默漏标」，且不会报错、极难发现。
 
-### 4.2 `regions` 字段有 CHECK 约束（只认杭州 13 区县）
-`travel_documents.regions` / `travel_document_chunks.regions` 有 `CHECK (regions <@ ARRAY['上城','拱墅','西湖',…,'淳安'])` 且 `cardinality <= 3`，**地市名写进去会直接报错**。
-**处理**：地市维度信息改放 `tags`（无取值约束，且 ES 里 `tags^4` 权重最高，反而更利于地市名召回）；`regions` 留空。若将来要支持按地市过滤，需要改约束（加 11 个地市名）。
+### 4.2 `regions` 字段的 CHECK 约束（2026-09-24 已放宽：删除取值白名单）
+`travel_documents` / `travel_document_chunks` / `travel_user_preferences` / `travel_suggested_questions` 四表原先各有 `region_values_check`（`<@ ARRAY['上城','拱墅','西湖',…,'淳安']` 杭州 13 区县取值白名单），地市名写进去会直接报错；另有 `regions_check`（`cardinality <= 3`）数量上限保留。
+**处理（2026-09-24，见 §14）**：新增迁移 `20260921_relax_regions_check.sql` 删除四表的取值白名单约束（`DROP CONSTRAINT IF EXISTS`，幂等），`cardinality <= 3` 数量上限保留；应用层无任何取值校验，`regions` 现已可存任意地市/区县名。入库脚本 `scripts/ingestCityDocs.ts` 随之把 `meta.city`（如 `杭州市`/`宁波市`）写入 `regions`，使城市级过滤（`retrieve`/`retrieveProject` 已支持 `regions` 入参，PG `c.regions && $x` 重叠过滤 + ES `region_codes` keyword 过滤）真正可用。
 
 ### 4.3 Milvus 未启动，dense 向量暂缺
 本次入库时 Milvus（`127.0.0.1:19530`）不可达，脚本自动跳过 dense 写入并在日志告警。**稀疏（ES/pg_trgm）链路不受影响，本次评测也不依赖 dense**。补 dense 需先起 Milvus，再 `npm run reindex:milvus`。
@@ -92,8 +93,9 @@ pg 漏 2 例：`multi-002`（带娃 + 沙滩 + 玩水 → 朱家尖）、`multi-
 ### 4.4 `created_by` 是 uuid 外键
 `createKnowledgeBase` / `createDocument` 的 `created_by` 指向 `travel_users`，填非 uuid 会报类型错、填不存在的 uuid 会违反外键。入库脚本默认用本地 admin 账号，可用 `CITY_KB_ACTOR` 覆盖。
 
-### 4.5 ES `fuzziness:'AUTO'`（v4 引入，v5 沿用）
-ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400 → 抛错 → 回落 `pg_trgm_fallback`）。实现上保留 `cross_fields` 作主 `must`，另起 `best_fields` 的 `should` 子句携带 `fuzziness:'AUTO'`（纯加分项）。已知限制：`AUTO` 对 ≤2 字 token 给 0 编辑距离，2 字错字仍靠 pg_trgm 兜底。
+### 4.5 ES `fuzziness`（v4 引入，2026-09-24 由 `AUTO` 改为显式 `1`）
+ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400 → 抛错 → 回落 `pg_trgm_fallback`）。实现上保留 `cross_fields` 作主 `must`，另起 `best_fields` 的 `should` 子句携带 `fuzziness`（纯加分项，不淘汰精确命中）。
+**变更（2026-09-24，见 §13）**：`fuzziness` 由写死的 `'AUTO'` 改为由 `RAG_ES_FUZZINESS`（默认 `1`）驱动。`AUTO` 对 ≤2 字 token 给 0 编辑距离，导致 2 字错字（南寻→南浔、西胡→西湖）无法被 ES 独立模糊召回，只能靠 pg_trgm 三元组 + `pg_trgm_fallback` 兜底；显式 `1` 让 1 字替换的 2 字错字也能被 ES 模糊召回。详见 §13 的 token 级验证。
 
 ### 4.6 索引持久化
 `docker-compose.yml` 已为 ES 配置 `travel_es_data` 持久卷，本次容器重启后索引仍在（88 切片）。但**切换 analyzer / mapping 后必须 `npm run reindex:es`**（脚本会先删索引再重建），否则字段分析器变更不生效。
@@ -139,10 +141,10 @@ ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400
 ## 7. 后续建议
 
 1. **补 dense 向量**：起 Milvus 后 `npm run reindex:milvus`，再评估「dense + sparse(RRF) + rerank」能否把长自然语言从 0.692 拉上去——这是当前最大的短板，且单靠稀疏后端已到顶。
-2. **长自然语言专项**：本次 5 例共漏全在长句。可考虑查询改写（LLM 抽取实体/意图后再检索），比继续调稀疏后端更有效。
-3. **2 字错字兜底**：如需 ES 独立覆盖（如 南寻→南浔 这类首字替换），评估 `fuzziness:1`；当前由 pg_trgm 三元组 + `pg_trgm_fallback` 兜底。
-4. **地市维度过滤**：若要按地市过滤，需放宽 `regions` 的 CHECK 约束（当前只认杭州 13 区县）。
-5. **灰度策略不变**：走 `ab` 分流（先 10% ES）→ 全量；ES 失败自动回落 `pg_trgm_fallback`，零风险。
+2. **长自然语言专项**：本次 5 例共漏全在长句。可考虑查询改写（LLM 抽取实体/意图后再检索），比继续调稀疏后端更有效。**（已落地：见 §12 查询改写，默认关闭）**
+3. **2 字错字兜底**：~~评估 `fuzziness:1`~~ **已完成（2026-09-24，§13）**：ES `should` 子句 `fuzziness` 改由 `RAG_ES_FUZZINESS`（默认 `1`）驱动，2 字错字（南寻→南浔、西胡→西湖）可被 ES 独立模糊召回，不再只靠 pg_trgm 兜底。
+4. **地市维度过滤**：~~需放宽 `regions` 的 CHECK 约束~~ **已完成（2026-09-24，§14）**：新增迁移 `20260921_relax_regions_check.sql` 删除四表取值白名单，`regions` 现已可存地市名，入库脚本同步写入 `meta.city`。
+5. **灰度策略不变**：走 `ab` 分流（先 10% ES）→ 全量；ES 失败自动回落 `pg_trgm_fallback`，零风险。**（已落地：见 §11）**
 
 ---
 
@@ -315,3 +317,49 @@ ES 8.11.3 不允许在 `type: cross_fields` 上启用 `fuzziness`（会 HTTP 400
 - `lib/infra/elasticsearch.ts`：`KeywordSearchRouter.search` 新增 `sparseQuery` 选项（分流仍按原句哈希）。
 - `lib/services/rag.ts`：`retrieve` / `retrieveProject` 各改写一次后传给稀疏臂。
 - `lib/config.ts`：新增 3 个开关；`scripts/evaluateQueryRewrite.ts` + `package.json` 的 `eval:rewrite`；`eval/results-rewrite.json`。
+
+---
+
+## 13. ES `fuzziness:1` 修正 2 字错字召回（2026-09-24）
+
+### 13.1 背景
+`lib/infra/elasticsearch.ts` 的稀疏检索 `should` 子句原先写死 `fuzziness: 'AUTO'`。ES 的 `AUTO` 对长度 ≤2 的 token 给 **0 编辑距离**，因此 2 字错字（南寻→南浔、西胡→西湖，均为 1 字替换）无法被 ES 独立模糊召回，只能靠 pg_trgm 三元组 + `pg_trgm_fallback` 兜底（见 §7.3 / §4.5）。
+
+### 13.2 改动
+- `lib/config.ts`：新增 `ragEsFuzziness: envInt('RAG_ES_FUZZINESS', 1)`。
+- `lib/infra/elasticsearch.ts`：`should` 子句 `fuzziness` 改为 `config.ragEsFuzziness`（默认 `1`）。该子句本就是 `must` 之外的纯加分项（`minimum_should_match` 默认 0），所以放开 fuzziness 不会淘汰精确命中、不会伤精度——只会在命中时加分。
+- 仍保留 `cross_fields` 主 `must`（无 fuzziness）作为准入门槛，保证召回集合不被 fuzziness 放大。
+
+### 13.3 验证（token 级对照，KB `26929070-…`，ES 已索引 103 切片）
+直接对 `content` 字段发 `match` 查询，对比 `AUTO` 与 `1`（analyzer 均用 `ik_smart`）：
+- 2 字错字 `南寻`（应模糊命中 `南浔`）：`AUTO` 命中 **14**、`fuzziness:1` 命中 **103**。
+  差异来源：IK 把「南寻」切成 `[南,寻]` 单字，`AUTO` 对 1 字 token 给 0 编辑距离，无法把 `寻` 模糊成 `浔`（14 个命中仅来自字面 `南`/`寻` 的精确匹配）；`fuzziness:1` 允许 1 编辑距离，`寻→浔` 成立，从而把南浔相关切片全部召回。
+- 正确词 `南浔`（IK 作整体 token）：`AUTO` 命中 **5**（精确），符合预期。
+- 结论：`fuzziness:1` 能覆盖 2 字错字而 `AUTO` 不能 —— 正是 §7.3 想要的能力。
+
+> 注：本次未重跑 §1 的 66 例全量评测，因为评测脚本依赖的金标准（按 `goldKeywords` ILIKE 反查）在 KB 已按 v6 重切（103 切片，chunk=500/100）后大量失效（多例 `gold=0`），且数据集当前仅 18 例；重切使「南寻古镇」即使 `AUTO` 也能借 `古镇` 进入 Top-5，无法干净体现增量。故改用上述 token 级对照作为权威验证。待数据集与金标准校准后，建议补一次 `eval:keyword` 全量复测错别字维度。
+
+### 13.4 新增产物
+- `lib/config.ts`：`ragEsFuzziness`（`RAG_ES_FUZZINESS`，默认 `1`）。
+- `lib/infra/elasticsearch.ts`：`should` 子句 `fuzziness` 由配置驱动。
+
+---
+
+## 14. 放宽城市级 `regions` 过滤（2026-09-24）
+
+### 14.1 背景
+`travel_documents` / `travel_document_chunks` / `travel_user_preferences` / `travel_suggested_questions` 四表各有 `*_region_values_check`（`regions <@ ARRAY['上城','拱墅','西湖',…,'淳安']` 杭州 13 区县取值白名单），地市名（杭州/宁波/温州…）写进去直接违反约束。入库脚本 `scripts/ingestCityDocs.ts` 此前只能把地市名塞进 `tags` 绕开（见 §4.2）。要「按地市过滤」必须先放开该约束。
+
+### 14.2 改动
+- 新增迁移 `migrations/20260921_relax_regions_check.sql`：对四表 `DROP CONSTRAINT IF EXISTS ..._region_values_check`（幂等）。**保留** `cardinality(regions) <= 3` 数量上限与 `NOT NULL` 约束。
+- 迁移里表名修正：偏好表实际名为 `travel_user_preferences`、建议问题表实际名为 `travel_suggested_questions`（基础迁移约束名沿用 `travel_preferences_*` / `travel_questions_*` 前缀，与表名不一致，初次执行因此报错，已修正表名后重跑成功）。
+- `scripts/ingestCityDocs.ts`：不再把地市名当白名单违例处理，直接把 `meta.city` 写入 `regions`（文档级与切片级一致，并同步进 ES `region_codes`），同时保留 `tags` 用于权重叠加。
+
+### 14.3 验证
+- 迁移已在本地 `travel` 库执行：pg_constraint 中四表 `*_region_values_check` 已消失，仅剩 `regions_check`（数量上限）与 `regions_not_null`；`schema_migrations` 已记录 `20260921_relax_regions_check.sql`。
+- 应用层无取值校验（`knowledge.ts` / `elasticsearch.ts` / `searchChunksByKeyword` 仅做 `regions &&` 重叠过滤），放松后 `regions` 可存任意地市/区县名，城市级过滤立即可用。
+
+### 14.4 注意 / 待办
+- `cardinality(regions) <= 3` 仍限制最多 3 个区域；若未来需要「一省多市」类大范围过滤，需再放宽数量上限（独立改动）。
+- 要让既有《浙江省地市旅游美食知识库》真正带 `regions`，需重跑 `npm run ingest:city`（幂等，先删后建）让 `meta.city` 落库；本次未自动重灌，以免改动被持续追踪的评测基线 KB。
+- 新增迁移对**全新库**同样安全：`initDb` 先建约束、本迁移再删，最终状态一致。

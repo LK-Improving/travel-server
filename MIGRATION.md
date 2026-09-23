@@ -68,3 +68,10 @@
 3. 环境侧：对象存储未配置时降级为**进程内内存实现**，worker 是独立进程读不到上传原文，摄取必然失败；本地联调需在 `.env` 启用 `OBJECT_STORAGE_*`（指向 MinIO）才能让两进程共享原文。
 
 **遗留（未修，需确认后处理）**：`lib/repositories/adminRepo.ts` 的 `audit()` 目前**无任何调用方**，运营台的建库/上传/发布等写操作不落审计日志（审计列表接口正常但恒为 0 条）；仅工具调用经 `enqueueAuditOutbox` 记录。是否给管理端写操作接上审计待定。
+
+### #5 / #6 小改（2026-09-24 完成，未独立提交）
+
+- **#5 ES `fuzziness:1` 修正 2 字错字召回**：`lib/infra/elasticsearch.ts` 稀疏检索 `should` 子句的 `fuzziness` 由写死 `'AUTO'` 改为由新配置 `RAG_ES_FUZZINESS`（默认 `1`）驱动（`lib/config.ts` 新增 `ragEsFuzziness`）。`AUTO` 对 ≤2 字 token 给 0 编辑距离，无法覆盖 2 字错字（南寻→南浔、西胡→西湖）；显式 `1` 使这类 1 字替换可被 ES 独立模糊召回，不再只靠 `pg_trgm_fallback`。该子句本就是 `must` 之外的纯加分项，不伤精度。token 级对照验证：`南寻` 查询 `AUTO` 命中 14、`fuzziness:1` 命中 103（差异即 `寻→浔` 的 1 编辑距离纠正）。详见 `eval/es-vs-pg_trgm-comparison.md` §13。
+- **#6 放宽城市级 `regions` 过滤**：新增迁移 `migrations/20260921_relax_regions_check.sql`，删除 `travel_documents` / `travel_document_chunks` / `travel_user_preferences` / `travel_suggested_questions` 四表的 `*_region_values_check` 取值白名单（杭州 13 区县），保留 `cardinality(regions) <= 3` 数量上限与 `NOT NULL`；应用层无取值校验，放松后 `regions` 可存任意地市/区县名，城市级过滤立即可用。`scripts/ingestCityDocs.ts` 同步把 `meta.city` 写入 `regions`。迁移已在本地 `travel` 库执行并确认约束已移除。详见 `eval/es-vs-pg_trgm-comparison.md` §14。
+
+> 注意：#5/#6 改完 `npm run typecheck` 0 错误；本次改动较小、相互正交，与既有提交一起评审/合入即可，未单独成提交。

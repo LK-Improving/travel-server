@@ -161,6 +161,10 @@ export const config = {
   // 若未装 IK，可改为 smartcn（ES 自带）或 standard。两者通过 env 切换，无需改代码。
   elasticsearchAnalyzer: env('ELASTICSEARCH_ANALYZER', 'ik_max_word'),
   elasticsearchSearchAnalyzer: env('ELASTICSEARCH_SEARCH_ANALYZER', 'ik_smart'),
+  // ES 稀疏检索 should 子句的模糊编辑距离（仅加分项，不淘汰精确命中）。
+  // 'AUTO' 对长度 <=2 的 token 给 0 编辑距离，导致 2 字错字（南寻→南浔、西胡→西湖）无法被 ES 独立模糊召回，
+  // 只能靠 pg_trgm 三元组 + pg_trgm_fallback 兜底。显式 1 可让 ES 独立覆盖 2 字错字；默认 1。
+  ragEsFuzziness: envInt('RAG_ES_FUZZINESS', 1),
 
   // ---------- 上传与 Excel 安全限制 ----------
   uploadMaxBytes: envInt('UPLOAD_MAX_BYTES', 20 * 1024 * 1024),

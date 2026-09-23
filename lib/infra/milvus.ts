@@ -426,6 +426,44 @@ export class MilvusRepository {
       };
     });
   }
+
+  /** 是否存在该 collection（校验脚本用它判断 Milvus 是否已 reindex，避免 scanChunkIds 顺带建空表）。 */
+  async hasCollection(): Promise<boolean> {
+    const client = this.getClient();
+    const res = await client.hasCollection({ collection_name: this.collectionName });
+    return Boolean(res.value);
+  }
+
+  /**
+   * 校验用：分页拉取 collection 内全部 chunk_id（仅主键，内存友好）。
+   * #7 归一化校验脚本用它扫描是否存在「32 位无连字符 hex」孤儿主键。
+   * 注意：本方法会经 ensureCollection 保活，调用方若想在 collection 不存在时直接跳过，
+   * 应先 hasCollection() 判存在，否则 ensureCollection 会创建空 collection。
+   */
+  async scanChunkIds(batch = 5000): Promise<string[]> {
+    await this.ensureCollection();
+    const client = this.getClient();
+    const ids: string[] = [];
+    let offset = 0;
+    for (;;) {
+      const res = await client.query({
+        collection_name: this.collectionName,
+        filter: '',
+        output_fields: ['chunk_id'],
+        limit: batch,
+        offset,
+      });
+      const rows = (res.data ?? []) as Array<{ chunk_id?: string }>;
+      if (!rows.length) break;
+      for (const row of rows) {
+        const cid = String(row.chunk_id ?? '');
+        if (cid) ids.push(cid);
+      }
+      if (rows.length < batch) break;
+      offset += rows.length;
+    }
+    return ids;
+  }
 }
 
 export const milvusRepository = new MilvusRepository();

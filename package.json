@@ -18,6 +18,7 @@
     "audit:outbox": "tsx scripts/auditOutboxWorker.ts",
     "reindex:es": "tsx scripts/reindexElasticsearch.ts",
     "reindex:milvus": "tsx scripts/reindexPublishedMilvus.ts",
+    "verify:chunk-id": "tsx scripts/verifyChunkIdNormalization.ts",
     "ingest:city": "tsx scripts/ingestCityDocs.ts",
     "eval:keyword": "tsx scripts/evaluateKeywordRecall.ts",
     "eval:hybrid": "tsx scripts/evaluateHybridRecall.ts",

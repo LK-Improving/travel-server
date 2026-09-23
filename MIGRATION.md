@@ -100,3 +100,4 @@
   - `npm run reindex:milvus` —— 默认仅 published；`MILVUS_REINDEX_ONLY_PUBLISHED=false` 连未发布切片一并回灌（更彻底，确保 Milvus 中零 32-hex）。
   - 验证：Milvus 查询 `chunk_id not like "%-%"` 应为 0 行；ES `_search` 抽样 `chunk_id` 均为 hyphenated。
 - 验证：`npm run typecheck` 0 错误（本次同时修复 `scripts/smokeRuntime.ts` 一个遗留类型错误：`auth.me` 步骤误将 `note` 写在 `call()` 返回值上而非 `results` 数组的 `StepResult` 上，导致 `tsc` 报 `Property 'note' does not exist`）。
+- 配套一键校验：`scripts/verifyChunkIdNormalization.ts`（`npm run verify:chunk-id`）扫描 PG/Milvus/ES 三处 `chunk_id`，断言无 32-hex 孤儿且数量与权威源对齐；本机执行 runbook 见 `docs/chunk-id-reindex-runbook.md`（含重灌步骤、预期值与故障排查）。

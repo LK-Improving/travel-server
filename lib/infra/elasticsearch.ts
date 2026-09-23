@@ -236,6 +236,44 @@ export class ElasticsearchKeywordSearch {
     });
     if (!response.ok) throw new Error(`Elasticsearch 删除文档失败：HTTP ${response.status}`);
   }
+
+  /**
+   * 校验用：分页拉取索引内全部 chunk_id（仅 _source: chunk_id）。
+   * 用 search_after 翻页避免单次 size 上限截断；用于 #7 归一化校验扫描 32-hex 孤儿。
+   */
+  async listAllChunkIds(): Promise<string[]> {
+    if (!this.configured) return [];
+    const index = this.index();
+    const ids: string[] = [];
+    let searchAfter: string[] | undefined;
+    for (;;) {
+      const body: Record<string, unknown> = {
+        size: 5000,
+        _source: ['chunk_id'],
+        sort: [{ chunk_id: 'asc' }],
+        query: { match_all: {} },
+      };
+      if (searchAfter) body.search_after = searchAfter;
+      const response = await this.request(`/${index}/_search`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error(`Elasticsearch 列举 chunk_id 失败：HTTP ${response.status}`);
+      const payload = (await response.json()) as {
+        hits?: { hits?: Array<{ _id?: string; _source?: { chunk_id?: string } }> };
+      };
+      const hits = payload.hits?.hits ?? [];
+      if (!hits.length) break;
+      for (const hit of hits) {
+        const cid = String(hit._source?.chunk_id ?? hit._id ?? '');
+        if (cid) ids.push(cid);
+      }
+      if (hits.length < 5000) break;
+      const last = hits[hits.length - 1];
+      searchAfter = [String(last._source?.chunk_id ?? last._id ?? '')];
+    }
+    return ids;
+  }
 }
 
 export const elasticsearchKeywordSearch = new ElasticsearchKeywordSearch();

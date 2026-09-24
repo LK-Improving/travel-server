@@ -25,7 +25,8 @@
     "eval:ab": "tsx scripts/verifyAbGrayscale.ts",
     "eval:rewrite": "tsx scripts/evaluateQueryRewrite.ts",
     "smoke:hybrid": "tsx scripts/smokeTestHybrid.ts",
-    "smoke:runtime": "tsx scripts/smokeRuntime.ts"
+    "smoke:runtime": "tsx scripts/smokeRuntime.ts",
+    "measure:response-time": "tsx scripts/measureResponseTime.ts"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.5.1",
